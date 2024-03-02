@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 const GithubLogo = (
   <svg
@@ -33,55 +34,86 @@ const EmailLogo = (
   </svg>
 );
 
-const buttonAnimation = ({ content, route = "/" }) => {
-  return (
-    <Link href={route} prefetch={true}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          duration: 0.5,
-          delay: 0,
-          ease: "easeInOut",
-        }}
-        className={`h-full rounded-sm border-2 border-transparent
-          bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
-          p-4 text-xl text-transparent antialiased
-          ${content === "Contact:" ? "" : "hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text"}`}
-      >
-        {content}
-      </motion.div>
-    </Link>
-  );
-};
-
-const buttonAnimationLogos = ({
-  content,
-  route = window.location.href,
-  ariaLabel,
-}) => {
-  return (
-    <a href={route} target="_blank" aria-label={ariaLabel}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          duration: 0.5,
-          delay: 0,
-          ease: "easeInOut",
-        }}
-        className={`h-full rounded-sm border-2 border-transparent
-          bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
-          p-4 text-xl text-transparent antialiased
-          ${content === "Contact:" ? "" : "hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text"}`}
-      >
-        {content}
-      </motion.div>
-    </a>
-  );
-};
+const selectedStyle =
+  "animate-shimmer bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] bg-[length:200%_100%] bg-clip-text";
+const contactStyle = "";
+const unSelectedStyle =
+  "hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text";
 
 export const Navbar = () => {
+  const [selected, setSelected] = useState("home");
+
+  useEffect(() => {
+    // Update selected option when location changes
+    const getInitialPath = () => {
+      const path = window.location.pathname;
+      const splitPath = path.split("/")[1] || "home";
+      return splitPath;
+    };
+    setSelected(getInitialPath());
+  }, []);
+
+  const handleClick = (option) => {
+    setSelected(option);
+  };
+
+  const buttonAnimation = ({ content, route = "/" }) => {
+    let currentStyle = "";
+    if (content === "Contact:") {
+      currentStyle = contactStyle;
+    } else if (content.toLowerCase() === selected) {
+      currentStyle = selectedStyle;
+    } else {
+      currentStyle = unSelectedStyle;
+    }
+
+    return (
+      <Link href={route} prefetch={true}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 0.5,
+            delay: 0,
+            ease: "easeInOut",
+          }}
+          className={`h-full rounded-sm border-2 border-transparent
+            bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
+            p-4 text-xl text-transparent antialiased
+            ${currentStyle}`}
+          onClick={() => handleClick(content.toLowerCase())}
+        >
+          {content}
+        </motion.div>
+      </Link>
+    );
+  };
+  const buttonAnimationLogos = ({
+    content,
+    route = window.location.href,
+    ariaLabel,
+  }) => {
+    return (
+      <a href={route} target="_blank" aria-label={ariaLabel}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 0.5,
+            delay: 0,
+            ease: "easeInOut",
+          }}
+          className={`h-full rounded-sm border-2 border-transparent
+            bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
+            p-4 text-xl text-transparent antialiased
+            ${content === "Contact:" ? "" : "hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text"}`}
+        >
+          {content}
+        </motion.div>
+      </a>
+    );
+  };
+
   return (
     <div className="absolute top-0 z-10 flex w-screen items-center justify-between px-4">
       <div className="flex items-center space-x-4">
@@ -90,7 +122,21 @@ export const Navbar = () => {
         {buttonAnimation({ content: "Projects", route: "/projects" })}
       </div>
       <div className="flex items-center space-x-2">
-        {buttonAnimation({ content: "Contact:" })}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 0.5,
+            delay: 0,
+            ease: "easeInOut",
+          }}
+          className={`h-full rounded-sm border-2 border-transparent
+            bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
+            p-4 text-xl text-transparent antialiased`}
+        >
+          Contact:
+        </motion.div>
+
         {buttonAnimationLogos({
           content: EmailLogo,
           route: "mailto:jortizsoftware@gmail.com",
