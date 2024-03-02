@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 
 const GithubLogo = (
   <svg
@@ -38,25 +38,19 @@ const selectedStyle =
   "animate-shimmer bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] bg-[length:200%_100%] bg-clip-text";
 const contactStyle = "";
 const unSelectedStyle =
-  "hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text";
+  "bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text";
 
 export const Navbar = () => {
   const [selected, setSelected] = useState("home");
 
   useEffect(() => {
-    // Update selected option when location changes
-    const getInitialPath = () => {
-      const path = window.location.pathname;
-      const splitPath = path.split("/")[1] || "home";
-      return splitPath;
-    };
-    setSelected(getInitialPath());
+    // Update selected option when component mounts
+    const splitPath = window.location.pathname.split("/")[1] || "home";
+    setSelected(splitPath);
   }, []);
-
   const handleClick = (option) => {
     setSelected(option);
   };
-
   const buttonAnimation = ({ content, route = "/" }) => {
     let currentStyle = "";
     if (content === "Contact:") {
@@ -66,7 +60,6 @@ export const Navbar = () => {
     } else {
       currentStyle = unSelectedStyle;
     }
-
     return (
       <Link href={route} prefetch={true}>
         <motion.div
@@ -78,7 +71,6 @@ export const Navbar = () => {
             ease: "easeInOut",
           }}
           className={`h-full rounded-sm border-2 border-transparent
-            bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
             p-4 text-xl text-transparent antialiased
             ${currentStyle}`}
           onClick={() => handleClick(content.toLowerCase())}
@@ -88,7 +80,8 @@ export const Navbar = () => {
       </Link>
     );
   };
-  const buttonAnimationLogos = ({
+  // Button animation for icon buttons
+  const buttonAnimationIcons = ({
     content,
     route = window.location.href,
     ariaLabel,
@@ -137,17 +130,17 @@ export const Navbar = () => {
           Contact:
         </motion.div>
 
-        {buttonAnimationLogos({
+        {buttonAnimationIcons({
           content: EmailLogo,
           route: "mailto:jortizsoftware@gmail.com",
           ariaLabel: "Email",
         })}
-        {buttonAnimationLogos({
+        {buttonAnimationIcons({
           content: GithubLogo,
           route: "https://github.com/jorgeortiz41",
           ariaLabel: "GitHub",
         })}
-        {buttonAnimationLogos({
+        {buttonAnimationIcons({
           content: LinkedinLogo,
           route: "https://www.linkedin.com/in/jorgeaortizramirez/",
           ariaLabel: "LinkedIn",
