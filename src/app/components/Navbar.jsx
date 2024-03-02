@@ -93,7 +93,7 @@ export const Navbar = () => {
         {buttonAnimation({ content: "Contact:" })}
         {buttonAnimationLogos({
           content: EmailLogo,
-          route: "mailto:jaort.2000@gmail.com",
+          route: "mailto:jortizsoftware@gmail.com",
           ariaLabel: "Email",
         })}
         {buttonAnimationLogos({
