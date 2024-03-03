@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState, useEffect, memo } from "react";
+import { RouteButton } from "./NavBarButtons";
 
 const GithubLogo = (
   <svg
@@ -34,13 +34,7 @@ const EmailLogo = (
   </svg>
 );
 
-const selectedStyle =
-  "animate-shimmer bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] bg-[length:200%_100%] bg-clip-text";
-const contactStyle = "";
-const unSelectedStyle =
-  "bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text";
-
-export const Navbar = () => {
+export const Navbar = memo(() => {
   const [selected, setSelected] = useState("home");
 
   useEffect(() => {
@@ -51,37 +45,7 @@ export const Navbar = () => {
   const handleClick = (option) => {
     setSelected(option);
   };
-  const buttonAnimation = ({ content, route = "/" }) => {
-    let currentStyle = "";
-    if (content === "Contact:") {
-      currentStyle = contactStyle;
-    } else if (content.toLowerCase() === selected) {
-      currentStyle = selectedStyle;
-    } else {
-      currentStyle = unSelectedStyle;
-    }
-    return (
-      <Link href={route} prefetch={true}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 0.5,
-            delay: 0,
-            ease: "easeInOut",
-          }}
-          className={`h-full rounded-sm border-2 border-transparent
-            p-4 text-xl text-transparent antialiased
-            ${currentStyle}`}
-          onClick={() => handleClick(content.toLowerCase())}
-        >
-          {content}
-        </motion.div>
-      </Link>
-    );
-  };
-  // Button animation for icon buttons
-  const buttonAnimationIcons = ({
+  const iconButtons = ({
     content,
     route = window.location.href,
     ariaLabel,
@@ -110,9 +74,24 @@ export const Navbar = () => {
   return (
     <div className="absolute top-0 z-10 flex w-screen items-center justify-between px-4">
       <div className="flex items-center space-x-4">
-        {buttonAnimation({ content: "Home", route: "/" })}
-        {buttonAnimation({ content: "About", route: "/about" })}
-        {buttonAnimation({ content: "Projects", route: "/projects" })}
+        <RouteButton
+          content="Home"
+          route="/"
+          selected={selected}
+          handleClick={() => handleClick("home")}
+        />
+        <RouteButton
+          content="About"
+          route="/about"
+          selected={selected}
+          handleClick={() => handleClick("about")}
+        />
+        <RouteButton
+          content="Projects"
+          route="/projects"
+          selected={selected}
+          handleClick={() => handleClick("projects")}
+        />
       </div>
       <div className="flex items-center space-x-2">
         <motion.div
@@ -130,17 +109,17 @@ export const Navbar = () => {
           Contact:
         </motion.div>
 
-        {buttonAnimationIcons({
+        {iconButtons({
           content: EmailLogo,
           route: "mailto:jortizsoftware@gmail.com",
           ariaLabel: "Email",
         })}
-        {buttonAnimationIcons({
+        {iconButtons({
           content: GithubLogo,
           route: "https://github.com/jorgeortiz41",
           ariaLabel: "GitHub",
         })}
-        {buttonAnimationIcons({
+        {iconButtons({
           content: LinkedinLogo,
           route: "https://www.linkedin.com/in/jorgeaortizramirez/",
           ariaLabel: "LinkedIn",
@@ -148,4 +127,6 @@ export const Navbar = () => {
       </div>
     </div>
   );
-};
+});
+
+Navbar.displayName = "Navbar";
