@@ -1,8 +1,20 @@
 "use client";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState } from "react";
+
+const buttonVariants = {
+  hovered: { scale: 1.1 },
+  nonhovered: { scale: 1 },
+};
+const svgVariants = {
+  hovered: { x: 3, y: -3 },
+  nonhovered: { x: 0, y: 0 },
+};
 
 export default function Home() {
+  const [hovered, setHovered] = useState("nonhovered");
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -38,13 +50,28 @@ export default function Home() {
           onClick={() => {
             const link = document.createElement("a");
             link.href = "/ResumeFeb2024.pdf";
-            link.download = "ResumeFeb2024.pdf";
+            link.target = "_blank";
             link.click();
           }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={hovered}
+          variants={buttonVariants}
+          onHoverStart={() => setHovered("hovered")}
+          onHoverEnd={() => setHovered("nonhovered")}
         >
-          Resume
+          Résumé
+          <motion.div
+            className="inline-flex"
+            animate={hovered}
+            variants={svgVariants}
+          >
+            <Image
+              src="/arrow-up-right.svg"
+              alt="pdf"
+              width={12}
+              height={12}
+              className="ml-2"
+            />
+          </motion.div>
         </motion.button>
       </div>
     </motion.div>

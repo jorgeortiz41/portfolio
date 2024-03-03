@@ -15,16 +15,24 @@ export const RouteButton = ({
   selected,
 }) => {
   let currentStyle = "";
+  let hoverEffect = {};
   if (content === "Contact:") {
     currentStyle = contactStyle;
   } else if (content.toLowerCase() === selected) {
     currentStyle = selectedStyle;
   } else {
     currentStyle = unSelectedStyle;
+    hoverEffect = {
+      scale: 1.1,
+      transition: {
+        duration: 0.1,
+        delay: 0,
+      },
+    };
   }
   return (
     <Link href={route} prefetch={true}>
-      <motion.div
+      <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
@@ -32,13 +40,15 @@ export const RouteButton = ({
           delay: 0,
           ease: "easeInOut",
         }}
-        className={`h-full rounded-sm border-2 border-transparent
-          p-4 text-xl text-transparent antialiased
+        className={`h-full rounded-sm border-2 border-transparent p-4
+          text-xl text-transparent antialiased
           ${currentStyle}`}
         onClick={() => handleClick(content.toLowerCase())}
+        whileHover={hoverEffect}
+        whileFocus={{ scale: 1.1 }}
       >
         {content}
-      </motion.div>
+      </motion.button>
     </Link>
   );
 };

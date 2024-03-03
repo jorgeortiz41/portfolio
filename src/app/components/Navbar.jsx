@@ -81,10 +81,10 @@ export const Navbar = memo(() => {
           handleClick={() => handleClick("home")}
         />
         <RouteButton
-          content="About"
-          route="/about"
+          content="Experience"
+          route="/experience"
           selected={selected}
-          handleClick={() => handleClick("about")}
+          handleClick={() => handleClick("experience")}
         />
         <RouteButton
           content="Projects"
