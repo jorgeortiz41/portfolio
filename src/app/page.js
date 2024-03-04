@@ -79,6 +79,7 @@ export default function Home() {
           selected={selected}
           handleClick={handleClick}
         />
+
         <div className="flex w-1/2 snap-y flex-col items-start justify-start space-y-32  py-24 pr-48 text-white antialiased">
           <About refProp={refs.about} />
           <Experience refProp={refs.experience} />
