@@ -31,7 +31,7 @@ export const RouteButton = ({
     };
   }
   return (
-    <Link href={route} prefetch={true}>
+    <Link href={route} prefetch={true} scroll={false}>
       <motion.button
         className={`h-full rounded-sm border-2 border-transparent py-4
           text-xl text-transparent antialiased

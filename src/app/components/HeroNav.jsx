@@ -73,11 +73,11 @@ export const HeroNav = () => {
         delay: 0,
         ease: "easeInOut",
       }}
-      className="fixed top-0 z-10 flex h-screen w-1/2 flex-col items-start justify-between py-24 pl-48"
+      className="sticky top-0 flex h-screen w-1/2 flex-col items-start justify-between overflow-auto py-24 pl-48"
     >
       <div className="flex flex-col items-start">
-        <h1 className="relative z-10 text-sm font-black text-white md:text-5xl">
-          Jorge Ortiz Ramirez
+        <h1 className="relative z-10 font-mono text-sm font-semibold text-white md:text-5xl">
+          Jorge Ortiz
         </h1>
         <h2 className="relative my-4 text-lg italic text-white">
           Software Engineering Student
