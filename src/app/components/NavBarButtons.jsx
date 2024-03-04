@@ -31,6 +31,10 @@ export const RouteButton = ({ content, selected, scrollTo, handleClick }) => {
         animate={
           isHovered || selected == content.toLowerCase() ? "large" : "small"
         }
+        transition={{
+          duration: 0.1,
+          ease: "easeInOut",
+        }}
         className="mr-2 inline-flex h-px bg-white"
         variants={lineVariants}
       />
