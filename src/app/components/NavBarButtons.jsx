@@ -1,40 +1,48 @@
 "use client";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
-const selectedStyle =
-  "animate-shimmer bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] bg-[length:200%_100%] bg-clip-text";
-const contactStyle = "";
-const unSelectedStyle =
-  "bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text";
+const lineVariants = {
+  large: { width: 80, backgroundColor: "white" },
+  small: { width: 40, backgroundColor: "#94a3b8" },
+};
 
-export const RouteButton = ({ content, selected, scrollTo }) => {
-  let currentStyle = "";
-  let hoverEffect = {};
-  if (content === "Contact:") {
-    currentStyle = contactStyle;
-  } else if (content.toLowerCase() === selected) {
-    currentStyle = selectedStyle;
-  } else {
-    currentStyle = unSelectedStyle;
-    hoverEffect = {
-      scale: 1.1,
-      transition: {
-        duration: 0.1,
-        delay: 0,
-      },
-    };
-  }
+const textVariants = {
+  large: { color: "white" },
+  small: { color: "#94a3b8" },
+};
+
+export const RouteButton = ({ content, selected, scrollTo, handleClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleButtonClick = (option) => {
+    scrollTo(option);
+    handleClick(option);
+  };
+
   return (
     <motion.button
-      className={`h-full rounded-sm border-2 border-transparent py-4
-          text-xl text-transparent antialiased
-          ${currentStyle}`}
-      onClick={() => scrollTo(content.toLowerCase())}
-      whileHover={hoverEffect}
-      whileFocus={{ scale: 1.1 }}
+      className={`text-md flex h-full items-center rounded-sm py-4 font-semibold text-slate-400 antialiased`}
+      onClick={() => handleButtonClick(content.toLowerCase())}
+      onHoverStart={() => setIsHovered((isHovered) => !isHovered)}
+      onHoverEnd={() => setIsHovered((isHovered) => !isHovered)}
     >
-      {content}
+      <motion.div
+        animate={
+          isHovered || selected == content.toLowerCase() ? "large" : "small"
+        }
+        className="mr-2 inline-flex h-px bg-white"
+        variants={lineVariants}
+      />
+      <motion.div
+        animate={
+          isHovered || selected == content.toLowerCase() ? "large" : "small"
+        }
+        className={isHovered ? "large" : "small"}
+        variants={textVariants}
+      >
+        {content}
+      </motion.div>
     </motion.button>
   );
 };

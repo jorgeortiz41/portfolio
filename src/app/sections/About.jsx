@@ -5,7 +5,7 @@ export default function About({ refProp }) {
   return (
     <div
       ref={refProp}
-      className="z-10 w-full flex-col items-start justify-start space-y-8 leading-relaxed text-white/80"
+      className="z-10 w-full flex-col items-start justify-start space-y-8 leading-relaxed text-slate-400"
     >
       <div>{firstParagraph}</div>
       <div>{secondParagraph}</div>
