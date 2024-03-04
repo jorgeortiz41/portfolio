@@ -1,55 +1,12 @@
 "use client";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { CardContainer, CardBody, CardItem } from "./HoverCard";
+import { CardContainer, CardBody, CardItem } from "../components/HoverCard";
+import { experiences } from "../data/data";
 
-const experiences = [
-  {
-    title: "Software Engineer Intern",
-    company: "Red Ventures",
-    date: "MAY — AUG 2023",
-    description:
-      "Collaborated with the Platea team to deliver front-end and back-end features on multiple websites. Utilized Word- Press, Twig, Timber, and PHP for front-end, and Prisma and Nest for back-end. Enhanced user engagement by implementing a ’Save’ feature for blog content and developing an API for user- generated lists. Drove A/B testing initiatives by coding two content gates, optimizing user interaction, and refining conversion pathways. Demonstrated proficiency in React and TypeScript while working on an additional site, further diversifying skill set and impact.",
-    tags: [
-      "React",
-      "TypeScript",
-      "Wordpress",
-      "Twig",
-      "Timber",
-      "PHP",
-      "Prisma",
-      "Nest",
-      "HTML & SCSS",
-    ],
-  },
-  {
-    title: "Software Engineer REU",
-    company: "Arecibo Observatory",
-    date: "MAY — AUG 2022",
-    description:
-      "Independently developed a proof of concept MERN stack web application under the guidance of a mentor. The application showcased real-time data from the 12m Radio Telescope, accompanied by a logging tool for operational data collection.",
-    tags: ["React", "Node.js", "Express", "MongoDB", "Mongoose", "HTML & SCSS"],
-  },
-  {
-    title: "Software Developer",
-    company: "SEA UPRM",
-    date: "SEP 2021 — MAY 2022",
-    description:
-      "I Developed web modules using PHP/Laravel/MySQL for the different services the organization offers. In addition to my technical responsibilities, I also collaborated with multidisciplinary teams to gather requirements, prioritize feature requests, provide technical support and training to end-users.",
-    tags: ["PHP", "Laravel", "MySQL", "HTML & SCSS"],
-  },
-  {
-    title: "Data Analyst Intern",
-    company: "VIPPR",
-    date: "SEP 2020 — FEB 2021",
-    description:
-      "Collaborated with an organization dedicated to aiding those affected by the 2020 Puerto Rico earthquakes. Focused on facilitating home reconstruction, I managed and processed thousands of requests containing demographic, financial, and diverse datasets. Leveraging Python scripts and data analysis techniques, I extracted meaningful insights to inform strategic decision-making and resource allocation.",
-    tags: ["Python", "Pandas", "Numpy", "Matplotlib", "Seaborn", "Jupyter"],
-  },
-];
-
-export default function Experience() {
+export default function Experience({ refProp }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hover, setHover] = useState(false);
 
   const handleHoverStart = (index) => {
     setHoveredIndex(index);
@@ -61,8 +18,8 @@ export default function Experience() {
 
   return (
     <div
-      id="experience"
-      className="z-10 w-full flex-col items-start justify-start space-y-8 text-white/50"
+      ref={refProp}
+      className="text-white/50c z-10 w-full snap-start scroll-mt-12 flex-col items-start justify-start space-y-8"
     >
       {experiences.map((job, index) => (
         <CardContainer key={index}>
@@ -105,7 +62,7 @@ export default function Experience() {
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 20 20"
                           fill="currentColor"
-                          class={
+                          className={
                             hoveredIndex === index
                               ? "ml-1 inline-block h-4 w-4 shrink-0 -translate-y-1 translate-x-1 transition-transform motion-reduce:transition-none"
                               : "ml-1 inline-block h-4 w-4 shrink-0 transition-transform motion-reduce:transition-none"
@@ -113,9 +70,9 @@ export default function Experience() {
                           aria-hidden="true"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           ></path>
                         </svg>
                       )}
@@ -138,6 +95,33 @@ export default function Experience() {
           </CardBody>
         </CardContainer>
       ))}
+      <div className="text-xl">
+        <button
+          className={hover ? "text-blue-300" : "text-white"}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          onClick={() => window.open("/resume.pdf", "_blank")}
+        >
+          View Full Résumé
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className={
+              hover
+                ? "ml-1 inline-block h-4 w-4 shrink-0 -translate-y-1 translate-x-1 transition-transform motion-reduce:transition-none"
+                : "ml-1 inline-block h-4 w-4 shrink-0 transition-transform motion-reduce:transition-none"
+            }
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
+              clipRule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
