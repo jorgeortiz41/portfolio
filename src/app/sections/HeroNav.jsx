@@ -5,11 +5,12 @@ import { RouteButton } from "../components/NavBarButtons";
 import { GithubLogo, LinkedinLogo, EmailLogo } from "../data/data";
 
 export const HeroNav = ({ scrollTo }) => {
-  const [selected, setSelected] = useState("home");
+  const [selected, setSelected] = useState("about");
 
   const handleClick = (option) => {
     setSelected(option);
   };
+
   const iconButtons = ({
     content,
     route = window.location.href,
@@ -17,12 +18,7 @@ export const HeroNav = ({ scrollTo }) => {
   }) => {
     return (
       <a href={route} target="_blank" aria-label={ariaLabel}>
-        <motion.div
-          className={`h-full rounded-sm border-2 border-transparent
-            bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
-            p-4 text-xl text-transparent antialiased
-            ${content === "Contact:" ? "" : "hover:animate-shimmer hover:bg-[linear-gradient(110deg,#0d9dde,25%,#a748de,55%,#0d9dde)] hover:bg-[length:200%_100%] hover:bg-clip-text"}`}
-        >
+        <motion.div className="h-full rounded-sm border-2 border-transparent p-4 text-xl text-slate-400 hover:text-white">
           {content}
         </motion.div>
       </a>
@@ -50,16 +46,23 @@ export const HeroNav = ({ scrollTo }) => {
         <p></p>
       </div>
       <div className="flex flex-col items-start">
-        <RouteButton content="About" selected={selected} scrollTo={scrollTo} />
+        <RouteButton
+          content="About"
+          selected={selected}
+          scrollTo={scrollTo}
+          handleClick={handleClick}
+        />
         <RouteButton
           content="Experience"
           selected={selected}
           scrollTo={scrollTo}
+          handleClick={handleClick}
         />
         <RouteButton
           content="Projects"
           selected={selected}
           scrollTo={scrollTo}
+          handleClick={handleClick}
         />
       </div>
       <div className="flex flex-col items-start">
