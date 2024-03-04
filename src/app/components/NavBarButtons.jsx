@@ -33,14 +33,7 @@ export const RouteButton = ({
   return (
     <Link href={route} prefetch={true}>
       <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          duration: 0.5,
-          delay: 0,
-          ease: "easeInOut",
-        }}
-        className={`h-full rounded-sm border-2 border-transparent p-4
+        className={`h-full rounded-sm border-2 border-transparent py-4
           text-xl text-transparent antialiased
           ${currentStyle}`}
         onClick={() => handleClick(content.toLowerCase())}
