@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 import { RouteButton } from "./NavBarButtons";
 
 const GithubLogo = (
@@ -34,7 +34,7 @@ const EmailLogo = (
   </svg>
 );
 
-export const Navbar = memo(() => {
+export const HeroNav = () => {
   const [selected, setSelected] = useState("home");
 
   useEffect(() => {
@@ -53,13 +53,6 @@ export const Navbar = memo(() => {
     return (
       <a href={route} target="_blank" aria-label={ariaLabel}>
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 0.5,
-            delay: 0,
-            ease: "easeInOut",
-          }}
           className={`h-full rounded-sm border-2 border-transparent
             bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
             p-4 text-xl text-transparent antialiased
@@ -72,8 +65,26 @@ export const Navbar = memo(() => {
   };
 
   return (
-    <div className="absolute top-0 z-10 flex w-screen items-center justify-between px-4">
-      <div className="flex items-center space-x-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{
+        duration: 0.5,
+        delay: 0,
+        ease: "easeInOut",
+      }}
+      className="sticky top-0 flex h-screen w-1/2 flex-col items-start justify-between overflow-auto py-24 pl-48"
+    >
+      <div className="flex flex-col items-start">
+        <h1 className="relative z-10 font-mono text-sm font-semibold text-white md:text-5xl">
+          Jorge Ortiz
+        </h1>
+        <h2 className="relative my-4 text-lg italic text-white">
+          Software Engineering Student
+        </h2>
+        <p></p>
+      </div>
+      <div className="flex flex-col items-start">
         <RouteButton
           content="Home"
           route="/"
@@ -93,40 +104,25 @@ export const Navbar = memo(() => {
           handleClick={() => handleClick("projects")}
         />
       </div>
-      <div className="flex items-center space-x-2">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 0.5,
-            delay: 0,
-            ease: "easeInOut",
-          }}
-          className={`h-full rounded-sm border-2 border-transparent
-            bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text
-            p-4 text-xl text-transparent antialiased`}
-        >
-          Contact:
-        </motion.div>
-
-        {iconButtons({
-          content: EmailLogo,
-          route: "mailto:jortizsoftware@gmail.com",
-          ariaLabel: "Email",
-        })}
-        {iconButtons({
-          content: GithubLogo,
-          route: "https://github.com/jorgeortiz41",
-          ariaLabel: "GitHub",
-        })}
-        {iconButtons({
-          content: LinkedinLogo,
-          route: "https://www.linkedin.com/in/jorgeaortizramirez/",
-          ariaLabel: "LinkedIn",
-        })}
+      <div className="flex flex-col items-start">
+        <div className="flex flex-row space-x-2">
+          {iconButtons({
+            content: EmailLogo,
+            route: "mailto:jortizsoftware@gmail.com",
+            ariaLabel: "Email",
+          })}
+          {iconButtons({
+            content: GithubLogo,
+            route: "https://github.com/jorgeortiz41",
+            ariaLabel: "GitHub",
+          })}
+          {iconButtons({
+            content: LinkedinLogo,
+            route: "https://www.linkedin.com/in/jorgeaortizramirez/",
+            ariaLabel: "LinkedIn",
+          })}
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
-});
-
-Navbar.displayName = "Navbar";
+};
