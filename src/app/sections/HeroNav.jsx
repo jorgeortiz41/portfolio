@@ -4,13 +4,7 @@ import { useState } from "react";
 import { RouteButton } from "../components/NavBarButtons";
 import { GithubLogo, LinkedinLogo, EmailLogo } from "../data/data";
 
-export const HeroNav = ({ scrollTo }) => {
-  const [selected, setSelected] = useState("about");
-
-  const handleClick = (option) => {
-    setSelected(option);
-  };
-
+export const HeroNav = ({ scrollTo, selected, handleClick }) => {
   const iconButtons = ({
     content,
     route = window.location.href,
