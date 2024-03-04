@@ -53,7 +53,9 @@ export default function Experience({ refProp }) {
                   <div className="text-md mb-2">
                     <span
                       className={
-                        hoveredIndex === index ? "text-blue-300" : "text-white"
+                        hoveredIndex === index
+                          ? "font-black text-blue-300"
+                          : "font-black text-white"
                       }
                     >
                       {job.title} • {job.company}
@@ -97,7 +99,7 @@ export default function Experience({ refProp }) {
       ))}
       <div className="text-xl">
         <button
-          className={hover ? "text-blue-300" : "text-white"}
+          className={hover ? "font-bold text-blue-300" : "font-bold text-white"}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
           onClick={() => window.open("/resume.pdf", "_blank")}

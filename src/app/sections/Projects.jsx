@@ -71,7 +71,9 @@ export default function Projects({ refProp }) {
                   <div className="text-md mb-2">
                     <span
                       className={
-                        hoveredIndex === index ? "text-blue-300" : "text-white"
+                        hoveredIndex === index
+                          ? "font-black text-blue-300"
+                          : "font-black text-white"
                       }
                     >
                       {project.title}
