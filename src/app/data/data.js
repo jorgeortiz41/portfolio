@@ -48,7 +48,7 @@ export const projects = [
     title: "GPT Discord Bot",
     image: "/brobot.png",
     description:
-      "A Discord bot that uses OpenAI's GPT-3.5-Turbo to generate text based on user input. The bot can also generate spreadsheet data in CSV.",
+      "A Discord bot that uses OpenAI's GPT-3.5-Turbo to generate text based on user input, also the bot can also generate spreadsheet data in CSV. Add it to your server!",
     tags: ["Python", "Discord", "GPT-3.5-Turbo"],
   },
   {

@@ -16,6 +16,23 @@ export default function Projects({ refProp }) {
     setHoveredIndex(null);
   };
 
+  const createDiscordLink = () => {
+    return (
+      <div>
+        A Discord bot that uses OpenAI's GPT-3.5-Turbo to generate text based on
+        user input, also the bot can also generate spreadsheet data in CSV.
+        <br />
+        <a
+          href="https://discord.com/oauth2/authorize?client_id=1164764096269402134&permissions=27482422508609&scope=bot"
+          className="text-sm font-bold text-white hover:underline"
+          target="_blank"
+        >
+          Add it to your server!
+        </a>
+      </div>
+    );
+  };
+
   return (
     <div
       ref={refProp}
@@ -79,7 +96,11 @@ export default function Projects({ refProp }) {
                       {project.title}
                     </span>
                   </div>
-                  <div className="mb-4 text-sm">{project.description}</div>
+                  <div className="mb-4 text-sm">
+                    {project.title === "GPT Discord Bot"
+                      ? createDiscordLink()
+                      : project.description}
+                  </div>
                   <div>
                     {project.tags.map((tag, index) => (
                       <div
