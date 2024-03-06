@@ -19,8 +19,9 @@ export default function Projects({ refProp }) {
   const createDiscordLink = () => {
     return (
       <div>
-        A Discord bot that uses OpenAI's GPT-3.5-Turbo to generate text based on
-        user input, also the bot can also generate spreadsheet data in CSV.
+        A Discord bot that uses OpenAI{"'"}s GPT-3.5-Turbo to generate text
+        based on user input, also the bot can also generate spreadsheet data in
+        CSV.
         <br />
         <a
           href="https://discord.com/oauth2/authorize?client_id=1164764096269402134&permissions=27482422508609&scope=bot"
