@@ -50,6 +50,7 @@ export const projects = [
     description:
       "A Discord bot that uses OpenAI's GPT-3.5-Turbo to generate text based on user input, also the bot can also generate spreadsheet data in CSV. Add it to your server!",
     tags: ["Python", "Discord", "GPT-3.5-Turbo"],
+    link: "https://top.gg/bot/1164764096269402134",
   },
   {
     title: "E-commerce Product Page",
@@ -57,6 +58,7 @@ export const projects = [
     description:
       "A responsive e-commerce product page built with React and Tailwind CSS. The page is fully responsive and has a clean and modern design.",
     tags: ["Next.js", "Tailwind CSS", "HTML"],
+    link: "https://github.com/jorgeortiz41/e-commerce-product",
   },
 ];
 
