@@ -1,6 +1,11 @@
 const firstParagraph =
-  "Hi there!, Im a software engineering student at the University of Puerto Rico Mayaguez. I first got interested in programming since i played video games and liked tech in general. Before college i tried a small HTML/CSS tutorial and loved the idea of creating something from scratch. Fast forward today, I have built web services for myself, local industries, and the scientific community.";
-const secondParagraph = "";
+  "Hey there! I'm a software engineering student at the University of Puerto Rico Mayaguez, and my journey into this field began with a childhood fascination for gaming and technology. I was always curious about how things like GPS and the internet worked, and I loved solving problems, although I'll admit, personal ones are a bit trickier!";
+const secondParagraph =
+  "Outside of coding, you'll often find me indulging in my hobbies, which include playing video games, hitting the pickleball or basketball courts, and catching up on NBA games or movies.";
+const thirdParagraph =
+  "What intrigues me most about software engineering is its wide array of industries and specializations. Whether it's web development, mobile app development, or cloud computing, there's always a fresh challenge to tackle. Personally, I'm particularly drawn to web development, as it lies at the core of modern software solutions, and data science, including ML and AI, due to its promising future.";
+const fourthParagraph =
+  "Ready to collaborate and drive innovation forward? Let's connect and make an impact together in the ever-evolving world of technology.";
 export default function About({ refProp }) {
   return (
     <div
@@ -9,7 +14,8 @@ export default function About({ refProp }) {
     >
       <div>{firstParagraph}</div>
       <div>{secondParagraph}</div>
-      <div>{firstParagraph}</div>
+      <div>{thirdParagraph}</div>
+      <div>{fourthParagraph}</div>
     </div>
   );
 }
