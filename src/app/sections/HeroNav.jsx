@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { RouteButton } from "../components/NavBarButtons";
 import { GithubLogo, LinkedinLogo, EmailLogo } from "../data/data";
 
@@ -12,7 +11,7 @@ export const HeroNav = ({ scrollTo, selected, handleClick }) => {
   }) => {
     return (
       <a href={route} target="_blank" aria-label={ariaLabel}>
-        <motion.div className="h-full rounded-sm border-2 border-transparent p-4 text-xl text-slate-400 hover:text-white">
+        <motion.div className="h-full rounded-sm border-2 border-transparent p-4">
           {content}
         </motion.div>
       </a>

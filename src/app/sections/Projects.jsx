@@ -50,10 +50,8 @@ export default function Projects({ refProp }) {
               width={150}
               height={50}
               whileHover={{
-                scale: 4.0,
-                x: -250,
-                y: -100,
-                boxShadow: "0px 10px 15px -3px rgba(0, 0, 0, 0.5)",
+                scale: 5.0,
+                boxShadow: "0px 10px 15px -3px rgba(0, 0, 0, 1)",
               }}
               transition={{
                 duration: 0.5,
