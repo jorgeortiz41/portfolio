@@ -4,7 +4,7 @@ export const experiences = [
     company: "Red Ventures",
     date: "MAY — AUG 2023",
     description:
-      "Collaborated with the Platea team to deliver front-end and back-end features on multiple websites. Utilized Word- Press, Twig, Timber, and PHP for front-end, and Prisma and Nest for back-end. Enhanced user engagement by implementing a ’Save’ feature for blog content and developing an API for user- generated lists. Drove A/B testing initiatives by coding two content gates, optimizing user interaction, and refining conversion pathways. Demonstrated proficiency in React and TypeScript while working on an additional site, further diversifying skill set and impact.",
+      "Collaborated with the Platea team to deliver front-end and back-end features on multiple websites. Utilized WordPress, Twig, Timber, and PHP for front-end, and Prisma and Nest for back-end. Enhanced user engagement by implementing a ’Save’ feature for blog content and developing an API for user- generated lists. Drove A/B testing initiatives by coding two content gates, optimizing user interaction, and refining conversion pathways. Demonstrated proficiency in React and TypeScript while working on an additional site, further diversifying skill set and impact.",
     tags: [
       "React",
       "TypeScript",
