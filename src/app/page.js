@@ -72,7 +72,7 @@ export default function Home() {
           delay: 0,
           ease: "easeInOut",
         }}
-        className="flex"
+        className="flex flex-col lg:flex-row"
       >
         <HeroNav
           scrollTo={scrollTo}
@@ -80,10 +80,25 @@ export default function Home() {
           handleClick={handleClick}
         />
 
-        <div className="flex w-1/2 snap-y flex-col items-start justify-start space-y-32  py-24 pr-48 text-white antialiased">
-          <About refProp={refs.about} />
-          <Experience refProp={refs.experience} />
-          <Projects refProp={refs.projects} />
+        <div className="flex w-full snap-y flex-col items-start justify-start space-y-32 text-white antialiased lg:w-1/2 lg:py-24 lg:pr-48">
+          <div>
+            <h1 className="sticky top-0 z-20 mb-4 w-full bg-transparent p-4 text-xl font-bold tracking-wide backdrop-blur lg:hidden ">
+              ABOUT
+            </h1>
+            <About refProp={refs.about} />
+          </div>
+          <div>
+            <h1 className="sticky top-0 z-20 mb-4 w-full bg-transparent p-4 text-xl font-bold tracking-wide backdrop-blur lg:hidden ">
+              EXPERIENCE
+            </h1>
+            <Experience refProp={refs.experience} />
+          </div>
+          <div>
+            <h1 className="sticky top-0 z-20 mb-4  w-full bg-transparent p-4 text-xl font-bold tracking-wide backdrop-blur lg:hidden ">
+              PROJECTS
+            </h1>
+            <Projects refProp={refs.projects} />
+          </div>
         </div>
       </motion.div>
     </>

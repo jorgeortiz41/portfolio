@@ -27,18 +27,18 @@ export const HeroNav = ({ scrollTo, selected, handleClick }) => {
         delay: 0,
         ease: "easeInOut",
       }}
-      className="sticky top-0 flex h-screen w-1/2 flex-col items-start justify-between overflow-auto py-24 pl-48"
+      className="top-0 mb-10 w-full flex-col items-start justify-between p-4 lg:sticky lg:mb-0 lg:flex lg:h-screen lg:w-1/2 lg:overflow-auto lg:py-24 lg:pl-48"
     >
       <div className="flex flex-col items-start">
-        <h1 className="relative z-10 font-mono text-sm font-semibold text-white md:text-5xl">
+        <h1 className="relative z-10 font-mono text-5xl font-semibold text-white md:text-5xl">
           <a href="/">Jorge Ortiz</a>
         </h1>
-        <h2 className="relative my-4 text-lg italic text-white">
+        <h2 className="relative my-4 text-lg text-white lg:italic">
           Software Engineering Student
         </h2>
         <p></p>
       </div>
-      <div className="flex flex-col items-start">
+      <div className="hidden flex-col items-start lg:flex">
         <RouteButton
           content="About"
           selected={selected}
