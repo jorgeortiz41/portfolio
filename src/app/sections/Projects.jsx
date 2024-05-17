@@ -38,7 +38,7 @@ export default function Projects({ refProp }) {
         ? projects.map((project, index) => (
             <motion.button
               key={index}
-              className="flex-flex-col rounded-lg bg-white/[0.03] p-4 shadow-xl"
+              className="flex flex-col rounded-lg gap-2 bg-white/[0.03] p-4 shadow-xl"
               onClick={() => window.open(project.link, "_blank")}
             >
               <div className="text-start">
@@ -107,10 +107,10 @@ export default function Projects({ refProp }) {
               }}
               className={
                 hoveredIndex === index
-                  ? "grid grid-cols-3 rounded-lg p-4"
+                  ? "grid grid-cols-3 rounded-lg p-4 gap-2"
                   : hoveredIndex !== null
-                    ? "grid grid-cols-3 rounded-lg p-4 opacity-50"
-                    : "grid grid-cols-3 rounded-lg p-4"
+                  ? "grid grid-cols-3 rounded-lg p-4 opacity-50 gap-2"
+                  : "grid grid-cols-3 rounded-lg p-4 gap-2"
               }
               onHoverStart={() => handleHoverStart(index)}
               onHoverEnd={handleHoverEnd}
@@ -122,14 +122,6 @@ export default function Projects({ refProp }) {
                   alt={project.title}
                   width={150}
                   height={50}
-                  whileHover={{
-                    scale: 5.0,
-                    boxShadow: "0px 10px 15px -3px rgba(0, 0, 0, 1)",
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    ease: "easeInOut",
-                  }}
                   className="transform-gpu rounded-sm bg-slate-950"
                 />
               </div>

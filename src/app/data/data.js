@@ -61,12 +61,12 @@ export const projects = [
     link: "https://github.com/jorgeortiz41/e-commerce-product",
   },
   {
-    title: "LeetCode 75(IN PROGRESS)",
+    title: "LeetGo-150 (IN PROGRESS)",
     image: "/leetcode.png",
     description:
-      "A collection of 75 LeetCode problems that cover a wide range of topics. The problems are solved in JavaScript.",
-    tags: ["JavaScript", "LeetCode"],
-    link: "https://github.com/jorgeortiz41/LEETCODE_75/tree/main",
+      "A collection of 150 LeetCode problems that cover a wide range of topics. The problems are solved in GoLang.",
+    tags: ["Golang", "DSA", "LeetCode"],
+    link: "https://github.com/jorgeortiz41/leetGo-150",
   },
 ];
 
