@@ -1,5 +1,14 @@
 export const experiences = [
   {
+    title: "Full-Stack Software Engineer",
+    company: "LeadWire Marketing",
+    date: "MAY 2024 — PRESENT",
+    description:
+      "Collaborated with the Leadwire team to develop and enhance full-stack features across frontend, backend, and API layers. Key contributions include integrating an API Logs view, implementing a multi-coupon view for enhanced client functionality, optimizing pagination and database queries for performance, and refining the UI with a focus on consistent design and usability. Led multiple bug fixes and performance improvements, adhering to best practices in modern web development.",
+    tags: ["React", "Apollo", "GraphQL", "PostgreSQL", "Prisma", "API"],
+    link: "https://www.leadwireapp.com/",
+  },
+  {
     title: "Software Engineer Intern",
     company: "Red Ventures",
     date: "MAY — AUG 2023",
@@ -16,6 +25,7 @@ export const experiences = [
       "Nest",
       "HTML & SCSS",
     ],
+    link: "https://www.redventures.com/",
   },
   {
     title: "Software Engineer REU",
