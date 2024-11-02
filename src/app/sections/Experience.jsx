@@ -31,9 +31,7 @@ export default function Experience({ refProp }) {
   };
 
   const renderLinkArrow = (job, index) => {
-    console.log("job company", job.company);
     if (linkCompanies.includes(job.company)) {
-      console.log("job company included");
       if (isMobile) {
         return (
           <svg
