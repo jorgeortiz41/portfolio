@@ -7,6 +7,7 @@ export default function Experience({ refProp }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [hover, setHover] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const linkCompanies = ["LeadWire Marketing", "Red Ventures"];
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,6 +30,54 @@ export default function Experience({ refProp }) {
     setHoveredIndex(null);
   };
 
+  const renderLinkArrow = (job, index) => {
+    console.log("job company", job.company);
+    if (linkCompanies.includes(job.company)) {
+      console.log("job company included");
+      if (isMobile) {
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className={
+              hoveredIndex === index
+                ? "ml-1 inline-block h-4 w-4 shrink-0 -translate-y-1 translate-x-1 transition-transform motion-reduce:transition-none"
+                : "ml-1 inline-block h-4 w-4 shrink-0 transition-transform motion-reduce:transition-none"
+            }
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
+              clipRule="evenodd"
+            ></path>
+          </svg>
+        );
+      } else {
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className={
+              hoveredIndex === index
+                ? "ml-1 inline-block h-4 w-4 shrink-0 -translate-y-1 translate-x-1 transition-transform motion-reduce:transition-none"
+                : "ml-1 inline-block h-4 w-4 shrink-0 transition-transform motion-reduce:transition-none"
+            }
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
+              clipRule="evenodd"
+            ></path>
+          </svg>
+        );
+      }
+    }
+  };
+
   return (
     <div
       ref={refProp}
@@ -39,6 +88,9 @@ export default function Experience({ refProp }) {
             <motion.button
               key={index}
               className="flex-flex-col rounded-lg bg-white/[0.03] p-4 shadow-xl"
+              onClick={() =>
+                job.link ? window.open(job.link, "_blank") : null
+              }
             >
               <div className="self-end pb-2">
                 <p className="text-start text-xs text-slate-400">{job.date}</p>
@@ -53,25 +105,7 @@ export default function Experience({ refProp }) {
                     }
                   >
                     {job.title} • {job.company}
-                    {job.company === "Red Ventures" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className={
-                          hoveredIndex === index
-                            ? "ml-1 inline-block h-4 w-4 shrink-0 -translate-y-1 translate-x-1 transition-transform motion-reduce:transition-none"
-                            : "ml-1 inline-block h-4 w-4 shrink-0 transition-transform motion-reduce:transition-none"
-                        }
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    )}
+                    {renderLinkArrow(job, index)}
                   </span>
                 </div>
                 <div className="mb-4 text-sm leading-relaxed text-slate-400">
@@ -106,11 +140,14 @@ export default function Experience({ refProp }) {
                 hoveredIndex === index
                   ? "grid grid-cols-3 rounded-lg p-4"
                   : hoveredIndex !== null
-                    ? "grid grid-cols-3 rounded-lg p-4 opacity-50"
-                    : "grid grid-cols-3 rounded-lg p-4"
+                  ? "grid grid-cols-3 rounded-lg p-4 opacity-50"
+                  : "grid grid-cols-3 rounded-lg p-4"
               }
               onHoverStart={() => handleHoverStart(index)}
               onHoverEnd={handleHoverEnd}
+              onClick={() =>
+                job.link ? window.open(job.link, "_blank") : null
+              }
             >
               <div>
                 <p className="text-start text-xs text-slate-400">{job.date}</p>
@@ -125,25 +162,7 @@ export default function Experience({ refProp }) {
                     }
                   >
                     {job.title} • {job.company}
-                    {job.company === "Red Ventures" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className={
-                          hoveredIndex === index
-                            ? "ml-1 inline-block h-4 w-4 shrink-0 -translate-y-1 translate-x-1 transition-transform motion-reduce:transition-none"
-                            : "ml-1 inline-block h-4 w-4 shrink-0 transition-transform motion-reduce:transition-none"
-                        }
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    )}
+                    {renderLinkArrow(job, index)}
                   </span>
                 </div>
                 <div className="mb-4 text-sm leading-relaxed text-slate-400">
