@@ -2,10 +2,18 @@ export const experiences = [
   {
     title: "Full-Stack Software Engineer",
     company: "LeadWire Marketing",
-    date: "MAY 2024 — PRESENT",
+    date: "MAY 2024 — AUG 2025",
     description:
-      "Collaborated with the Leadwire team to develop and enhance full-stack features across frontend, backend, and API layers. Key contributions include integrating an API Logs view, implementing a multi-coupon view for enhanced client functionality, optimizing pagination and database queries for performance, and refining the UI with a focus on consistent design and usability. Led multiple bug fixes and performance improvements, adhering to best practices in modern web development.",
-    tags: ["React", "Apollo", "GraphQL", "PostgreSQL", "Prisma", "API"],
+      "At LeadWire, I contributed to modernizing a large-scale SMS marketing platform through both UI/UX design and full-stack engineering. I led a major UI redesign—revamping the dashboard, navigation, modals, and global styles for improved usability and consistency. I also implemented real-time dashboard updates using WebSockets and aggregated stats tables, optimized SQL queries for performance, and resolved dozens of bugs during QA testing. To future-proof the platform, I spearheaded a full-stack upgrade (Node.js 20, React 18, Apollo v3, Material UI v5) and migrated the build process to Vite for faster development.",
+    tags: [
+      "React",
+      "JavaScript",
+      "Apollo",
+      "GraphQL",
+      "PostgreSQL",
+      "Prisma",
+      "API",
+    ],
     link: "https://www.leadwireapp.com/",
   },
   {
