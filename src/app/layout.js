@@ -3,6 +3,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { CustomCursor } from "./components/CustomCursor";
 
 export const metadata = {
   title: "Jortiz",
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <div>{children}</div>
         <Analytics />
         <SpeedInsights />
+        <CustomCursor />
       </body>
     </html>
   );
