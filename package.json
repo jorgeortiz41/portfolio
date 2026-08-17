@@ -2,6 +2,9 @@
   "name": "portfolio",
   "version": "0.2",
   "private": true,
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -23,7 +26,7 @@
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
-    "@types/node": "20.11.22",
+    "@types/node": "24.13.3",
     "@types/react": "18.2.60",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
