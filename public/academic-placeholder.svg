@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340">
+  <defs>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#082f49"/>
+      <stop offset="100%" stop-color="#0c4a6e"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="340" fill="url(#g3)"/>
+  <rect x="70" y="90" width="200" height="140" rx="8" fill="#0ea5e9" opacity="0.12" stroke="#38bdf8" stroke-width="1.5"/>
+  <rect x="90" y="110" width="160" height="12" rx="3" fill="#38bdf8" opacity="0.6"/>
+  <rect x="90" y="132" width="120" height="10" rx="3" fill="#38bdf8" opacity="0.4"/>
+  <rect x="90" y="150" width="140" height="10" rx="3" fill="#38bdf8" opacity="0.4"/>
+  <rect x="90" y="168" width="100" height="10" rx="3" fill="#38bdf8" opacity="0.4"/>
+  <rect x="330" y="90" width="200" height="140" rx="8" fill="#0ea5e9" opacity="0.12" stroke="#38bdf8" stroke-width="1.5"/>
+  <circle cx="380" cy="140" r="8" fill="#38bdf8"/>
+  <circle cx="420" cy="160" r="8" fill="#38bdf8" opacity="0.7"/>
+  <circle cx="460" cy="130" r="8" fill="#38bdf8" opacity="0.5"/>
+  <path d="M380,140 L420,160 L460,130" stroke="#38bdf8" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <rect x="350" y="190" width="160" height="10" rx="3" fill="#38bdf8" opacity="0.5"/>
+  <text x="300" y="290" font-family="monospace" font-size="22" fill="#e2e8f0" text-anchor="middle" font-weight="bold">Platano DB</text>
+  <text x="300" y="312" font-family="monospace" font-size="12" fill="#bae6fd" text-anchor="middle">Academic Analytics + AI Chatbot</text>
+</svg>

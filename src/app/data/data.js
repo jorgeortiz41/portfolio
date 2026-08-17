@@ -1,7 +1,23 @@
 export const experiences = [
   {
-    title: "Full-Stack Software Engineer",
-    company: "LeadWire Marketing",
+    title: "Cyber Threat Intelligence & AI Engineering Intern",
+    company: "Evertec",
+    date: "JUN — AUG 2026",
+    description:
+      "Built ARGUS, an AI-assisted OSINT platform integrating the Recorded Future API to enrich IPs, domains, hashes, URLs, malware, emails, and usernames with risk scores, relationship graphs, and MITRE ATT&CK-mapped threat intelligence. Designed a Pydantic AI agent (CLI + web GUI) that orchestrates entity resolution, enrichment, and a policy-driven corroboration layer spanning 14 OSINT integrations (Shodan, VirusTotal, AbuseIPDB, WHOIS, DNS, GitHub, and others). Implemented a deterministic source-verification system that extracts and cites API-derived facts independently of the LLM, ensuring every claim in generated briefings is auditable and hallucination-free. Automated STIX 2.1 bundle generation and Word (.docx) threat report exports aligned with Traffic Light Protocol (TLP) and industry intelligence-sharing standards.",
+    tags: [
+      "Python",
+      "Pydantic AI",
+      "FastAPI",
+      "OSINT",
+      "STIX 2.1",
+      "MITRE ATT&CK",
+      "LLM",
+    ],
+  },
+  {
+    title: "Full-Stack Software Engineer Intern",
+    company: "LeadWire LLC",
     date: "MAY 2024 — AUG 2025",
     description:
       "At LeadWire, I contributed to modernizing a large-scale SMS marketing platform through both UI/UX design and full-stack engineering. I led a major UI redesign—revamping the dashboard, navigation, modals, and global styles for improved usability and consistency. I also implemented real-time dashboard updates using WebSockets and aggregated stats tables, optimized SQL queries for performance, and resolved dozens of bugs during QA testing. To future-proof the platform, I spearheaded a full-stack upgrade (Node.js 20, React 18, Apollo v3, Material UI v5) and migrated the build process to Vite for faster development.",
@@ -17,7 +33,7 @@ export const experiences = [
     link: "https://www.leadwireapp.com/",
   },
   {
-    title: "Software Engineer Intern",
+    title: "Associate Software Engineer Intern",
     company: "Red Ventures",
     date: "MAY — AUG 2023",
     description:
@@ -36,13 +52,16 @@ export const experiences = [
     link: "https://www.redventures.com/",
   },
   {
-    title: "Software Engineer REU",
+    title: "Software Engineering REU",
     company: "Arecibo Observatory",
     date: "MAY — AUG 2022",
     description:
       "Independently developed a proof of concept MERN stack web application under the guidance of a mentor. The application showcased real-time data from the 12m Radio Telescope, accompanied by a logging tool for operational data collection.",
     tags: ["React", "Node.js", "Express", "MongoDB", "Mongoose", "HTML & SCSS"],
   },
+];
+
+export const archivedExperiences = [
   {
     title: "Software Developer",
     company: "SEA UPRM",
@@ -63,6 +82,47 @@ export const experiences = [
 
 export const projects = [
   {
+    title: "ARGUS — AI-Assisted OSINT Platform",
+    image: "/argus-placeholder.svg",
+    description:
+      "An AI-assisted OSINT platform built at Evertec that integrates the Recorded Future API to enrich IPs, domains, hashes, URLs, and more with risk scores and MITRE ATT&CK-mapped intelligence. Features a Pydantic AI agent (CLI + web GUI) orchestrating 14 OSINT integrations with a deterministic, hallucination-free source-verification layer, plus automated STIX 2.1 and Word report exports.",
+    tags: [
+      "Python",
+      "Pydantic AI",
+      "FastAPI",
+      "OSINT",
+      "STIX 2.1",
+      "Recorded Future API",
+    ],
+  },
+  {
+    title: "AI Performance Analytics Platform for Esports",
+    image: "/esports-placeholder.svg",
+    description:
+      "A full-stack esports analytics platform using FastAPI, PostgreSQL, and Next.js to ingest Riot Games match data, compute player performance metrics, and power interactive dashboards. Trained and deployed seven machine learning models with scikit-learn and XGBoost for predictions and recommendations.",
+    tags: ["FastAPI", "PostgreSQL", "Next.js", "scikit-learn", "XGBoost"],
+    link: "https://capstone-esports.vercel.app/",
+  },
+  {
+    title: "AI-Powered Academic Course Management Platform",
+    image: "/academic-placeholder.svg",
+    description:
+      "A full-stack academic data platform featuring a PostgreSQL backend, ETL pipeline, and REST API built with Flask. Developed interactive analytics dashboards and integrated an AI chatbot using pgvector and Ollama to answer natural-language questions from course syllabi.",
+    tags: ["Flask", "PostgreSQL", "pgvector", "Ollama", "ETL"],
+    link: "https://github.com/jorgeortiz41/fall2025v2-platano_db",
+  },
+  {
+    title: "Synthetic RFI Generator for the K-band",
+    image: "/rfi-placeholder.svg",
+    description:
+      "A synthetic Radio Frequency Interference (RFI) generator with GUI/CLI in Python for K-band radio science research, modeling modern RFI sources and generating datasets for radio astronomy research at the Arecibo Observatory's Industrial Affiliates Program.",
+    tags: ["Python", "Radio Science", "GUI/CLI", "Signal Processing"],
+    link: "https://github.com/jorgeortiz41/RFIGenerator",
+  },
+];
+
+export const archivedProjects = [
+  {
     title: "GPT Discord Bot",
     image: "/brobot.png",
     description:
@@ -79,12 +139,65 @@ export const projects = [
     link: "https://github.com/jorgeortiz41/e-commerce-product",
   },
   {
-    title: "LeetGo-150 (IN PROGRESS)",
+    title: "LeetGo-150",
     image: "/leetcode.png",
     description:
       "A collection of 150 LeetCode problems that cover a wide range of topics. The problems are solved in GoLang.",
     tags: ["Golang", "DSA", "LeetCode"],
     link: "https://github.com/jorgeortiz41/leetGo-150",
+  },
+];
+
+export const skills = [
+  {
+    category: "Languages",
+    items: [
+      "Python",
+      "Java",
+      "JavaScript",
+      "TypeScript",
+      "Golang",
+      "PHP",
+      "HTML",
+      "CSS",
+    ],
+  },
+  {
+    category: "AI / ML",
+    items: [
+      "Pydantic AI",
+      "scikit-learn",
+      "XGBoost",
+      "Ollama",
+      "pgvector",
+      "LLM Agents",
+      "RAG",
+    ],
+  },
+  {
+    category: "Frameworks & Libraries",
+    items: [
+      "React",
+      "Next.js",
+      "FastAPI",
+      "Flask",
+      "Express",
+      "Nest",
+      "WordPress",
+      "Prisma",
+      "GraphQL",
+      "Tailwind CSS",
+      "Material UI",
+      "Framer Motion",
+    ],
+  },
+  {
+    category: "Databases",
+    items: ["PostgreSQL", "MongoDB", "MySQL"],
+  },
+  {
+    category: "Cloud & Tools",
+    items: ["AWS", "Vercel", "Heroku", "Docker", "Git"],
   },
 ];
 

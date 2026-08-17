@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340">
+  <defs>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0033"/>
+      <stop offset="100%" stop-color="#3b0764"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="340" fill="url(#g4)"/>
+  <path d="M40,170 Q100,60 160,170 T280,170 T400,170 T520,170"
+    fill="none" stroke="#e879f9" stroke-width="2" opacity="0.8"/>
+  <path d="M40,190 Q100,240 160,190 T280,190 T400,190 T520,190"
+    fill="none" stroke="#c084fc" stroke-width="1.5" opacity="0.5"/>
+  <g fill="#e879f9" opacity="0.7">
+    <rect x="100" y="230" width="6" height="40"/>
+    <rect x="130" y="210" width="6" height="60"/>
+    <rect x="160" y="245" width="6" height="25"/>
+    <rect x="190" y="220" width="6" height="50"/>
+    <rect x="220" y="235" width="6" height="35"/>
+    <rect x="250" y="215" width="6" height="55"/>
+    <rect x="280" y="240" width="6" height="30"/>
+    <rect x="310" y="225" width="6" height="45"/>
+    <rect x="340" y="238" width="6" height="32"/>
+    <rect x="370" y="212" width="6" height="58"/>
+    <rect x="400" y="228" width="6" height="42"/>
+    <rect x="430" y="242" width="6" height="28"/>
+  </g>
+  <text x="300" y="290" font-family="monospace" font-size="22" fill="#e2e8f0" text-anchor="middle" font-weight="bold">RFI Generator</text>
+  <text x="300" y="312" font-family="monospace" font-size="12" fill="#f0abfc" text-anchor="middle">Synthetic K-band Interference • Python</text>
+</svg>

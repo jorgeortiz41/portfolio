@@ -52,7 +52,19 @@ export const HeroNav = ({ scrollTo, selected, handleClick }) => {
           handleClick={handleClick}
         />
         <RouteButton
+          content="Skills"
+          selected={selected}
+          scrollTo={scrollTo}
+          handleClick={handleClick}
+        />
+        <RouteButton
           content="Projects"
+          selected={selected}
+          scrollTo={scrollTo}
+          handleClick={handleClick}
+        />
+        <RouteButton
+          content="Resume"
           selected={selected}
           scrollTo={scrollTo}
           handleClick={handleClick}
