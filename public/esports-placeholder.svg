@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340">
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="340" fill="url(#g2)"/>
+  <polyline points="60,260 140,220 220,240 300,150 380,180 460,100 540,130"
+    fill="none" stroke="#a78bfa" stroke-width="3" opacity="0.9"/>
+  <g fill="#a78bfa">
+    <circle cx="60" cy="260" r="4"/>
+    <circle cx="140" cy="220" r="4"/>
+    <circle cx="220" cy="240" r="4"/>
+    <circle cx="300" cy="150" r="4"/>
+    <circle cx="380" cy="180" r="4"/>
+    <circle cx="460" cy="100" r="4"/>
+    <circle cx="540" cy="130" r="4"/>
+  </g>
+  <rect x="60" y="60" width="60" height="20" rx="4" fill="#4338ca" opacity="0.7"/>
+  <rect x="140" y="60" width="90" height="20" rx="4" fill="#4338ca" opacity="0.5"/>
+  <rect x="250" y="60" width="50" height="20" rx="4" fill="#4338ca" opacity="0.6"/>
+  <text x="300" y="290" font-family="monospace" font-size="22" fill="#e2e8f0" text-anchor="middle" font-weight="bold">Esports Analytics</text>
+  <text x="300" y="312" font-family="monospace" font-size="12" fill="#c7d2fe" text-anchor="middle">FastAPI • Next.js • ML Predictions</text>
+</svg>
