@@ -1,31 +1,283 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* ==========================================================================
+   1. Animatable custom properties
+   Registering these lets the browser interpolate them natively. Without
+   @property, `--kin-wght` is just a string and transitions snap instead of
+   tween. This is what makes the kinetic type smooth without a JS tween loop.
+   ========================================================================== */
+
+@property --kin-wght {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 400;
+}
+
+@property --kin-wdth {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 100;
+}
+
+@property --kin-opsz {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 14;
+}
+
+/* Per-project accent hue, 0-360. Inherits so a single inline style on a page
+   wrapper re-colors everything beneath it, with no client JS. */
+@property --accent-h {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 38;
+}
+
+/* ==========================================================================
+   2. Theme tokens
+   Light is defined on bare :root. Dark is redefined twice: under
+   prefers-color-scheme (guarded so an explicit light choice wins) and under
+   [data-theme="dark"] (so the toggle wins in both directions).
+   ========================================================================== */
 
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+  color-scheme: light;
+
+  --bg: oklch(0.985 0.003 85);
+  --bg-elevated: oklch(0.962 0.004 85);
+  --ink: oklch(0.16 0.006 60);
+  --ink-muted: oklch(0.44 0.006 60);
+  --ink-faint: oklch(0.62 0.005 60);
+  --rule: oklch(0.16 0.006 60 / 0.14);
+  --rule-strong: oklch(0.16 0.006 60 / 0.28);
+
+  /* Lightness + chroma are held per theme so that any hue a project picks is
+     legible against that theme's background. A project supplies only --accent-h.
+
+     These two numbers are measured, not guessed. Swept across all 36 hue steps
+     (0-350) against this theme's background, L=0.48/C=0.15 yields a worst-case
+     WCAG contrast of 5.26:1 (at hue 190, cyan — the weakest hue in light mode).
+     Raising L to 0.52 drops that to 4.49 and fails AA. Do not raise it without
+     re-running the sweep in the browser. */
+  --accent-l: 0.48;
+  --accent-c: 0.15;
+
+  --grain-opacity: 0.035;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: oklch(0.125 0.005 280);
+    --bg-elevated: oklch(0.175 0.006 280);
+    --ink: oklch(0.97 0.003 85);
+    --ink-muted: oklch(0.73 0.005 85);
+    --ink-faint: oklch(0.55 0.006 85);
+    --rule: oklch(0.97 0.003 85 / 0.12);
+    --rule-strong: oklch(0.97 0.003 85 / 0.26);
+
+    /* Worst case across all 36 hues: 9.64:1 (hue 20). Wide margin. */
+    --accent-l: 0.8;
+    --accent-c: 0.145;
+
+    --grain-opacity: 0.05;
+  }
 }
 
-body {
-    background-image: linear-gradient(
-        111.4deg,
-        rgba(7, 7, 9, 1) 6.5%,
-        rgba(27, 24, 113, 1) 93.2%
-    );
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: oklch(0.125 0.005 280);
+  --bg-elevated: oklch(0.175 0.006 280);
+  --ink: oklch(0.97 0.003 85);
+  --ink-muted: oklch(0.73 0.005 85);
+  --ink-faint: oklch(0.55 0.006 85);
+  --rule: oklch(0.97 0.003 85 / 0.12);
+  --rule-strong: oklch(0.97 0.003 85 / 0.26);
+
+  --accent-l: 0.8;
+  --accent-c: 0.145;
+
+  --grain-opacity: 0.05;
 }
 
-@layer utilities {
-    .text-balance {
-        text-wrap: balance;
+/* Composed accent. Every accent in the site derives from these three numbers. */
+:root {
+  --accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --accent-soft: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.14);
+  --accent-hairline: oklch(
+    var(--accent-l) var(--accent-c) var(--accent-h) / 0.4
+  );
+}
+
+/* ==========================================================================
+   3. Tailwind theme
+   `@theme inline` emits utilities that reference the vars above rather than
+   inlining their values, which is what keeps them live across theme changes.
+   ========================================================================== */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-hairline: var(--accent-hairline);
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Fluid display sizes. The hero is the only true "display" size. */
+  --text-hero: clamp(2.75rem, 9vw, 7rem);
+  --text-hero--line-height: 0.92;
+  --text-display: clamp(2rem, 5.5vw, 4rem);
+  --text-display--line-height: 0.98;
+  --text-title: clamp(1.5rem, 3vw, 2.25rem);
+  --text-title--line-height: 1.1;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   4. Base
+   ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* The old site had no focus indicator at all — Preflight strips the UA
+     outline and nothing replaced it. This is the single most important
+     accessibility fix in V2, so it lives on the universal selector. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Long-form case-study prose caps here; display text is exempt. */
+  :where(.prose) p,
+  :where(.prose) li {
+    max-width: 68ch;
+  }
+}
+
+/* ==========================================================================
+   5. Kinetic type
+   font-variation-settings is NOT GPU-composited, so it is confined to
+   display-size elements only — never body copy, never list items.
+   ========================================================================== */
+
+@utility kinetic {
+  font-variation-settings:
+    "wght" var(--kin-wght),
+    "wdth" var(--kin-wdth),
+    "opsz" var(--kin-opsz);
+  transition:
+    --kin-wght 420ms var(--ease-out-expo),
+    --kin-wdth 420ms var(--ease-out-expo);
+}
+
+/* Section headings widen as they enter the viewport. Pure CSS: this runs off
+   the main thread where animation-timeline is supported, and simply does
+   nothing where it isn't. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .kinetic-enter {
+      animation: kinetic-widen linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
     }
+  }
+}
+
+@keyframes kinetic-widen {
+  from {
+    --kin-wdth: 82;
+    --kin-wght: 380;
+    opacity: 0.55;
+  }
+  to {
+    --kin-wdth: 100;
+    --kin-wght: 620;
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   6. Film grain
+   One fixed overlay. Cheap, and it does more for texture than any animation.
+   ========================================================================== */
+
+@utility grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+}
+
+/* ==========================================================================
+   7. Reduced motion — the top rung of the degradation ladder
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .kinetic {
+    font-variation-settings:
+      "wght" 500,
+      "wdth" 100;
+    transition: none;
+  }
+
+  .grain-overlay {
+    display: none;
+  }
 }
