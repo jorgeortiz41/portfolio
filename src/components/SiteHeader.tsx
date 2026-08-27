@@ -15,7 +15,10 @@ const nav = [
  */
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-rule bg-bg/80 backdrop-blur-md">
+    <header
+      style={{ viewTransitionName: "site-header" }}
+      className="sticky top-0 z-50 border-b border-rule bg-bg/80 backdrop-blur-md"
+    >
       <Container className="flex h-16 items-center justify-between gap-6">
         <Link
           href="/"

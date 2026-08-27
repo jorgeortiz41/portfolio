@@ -355,3 +355,30 @@
     display: none;
   }
 }
+
+/* ==========================================================================
+   8. View transitions
+   ========================================================================== */
+
+/* The sticky header is present on both sides of every navigation, so give it a
+   stable name and let it hold still while the page beneath it morphs. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(site-header) {
+    animation-duration: 0s;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--ease-out-expo);
+  }
+}
+
+/* A view transition should never override an explicit motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ProjectRow } from "@/components/work/ProjectRow";
+import { CursorPreview } from "@/components/work/CursorPreview";
 import type { ProjectSummary } from "@/lib/schema";
 import { cn } from "@/lib/cn";
 
@@ -61,11 +62,13 @@ export function ProjectFilter({
         {visible.length} {visible.length === 1 ? "project" : "projects"} shown
       </p>
 
-      <ul className="mt-10">
-        {visible.map((project, i) => (
-          <ProjectRow key={project.slug} project={project} index={i + 1} />
-        ))}
-      </ul>
+      <CursorPreview projects={visible}>
+        <ul className="mt-10">
+          {visible.map((project, i) => (
+            <ProjectRow key={project.slug} project={project} index={i + 1} />
+          ))}
+        </ul>
+      </CursorPreview>
 
       {visible.length === 0 && (
         <p className="border-t border-rule py-16 text-center text-ink-faint">

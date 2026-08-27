@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "@/components/icons";
+import { Morph } from "@/components/motion/Morph";
 import { accentStyle } from "@/lib/accent";
 import type { ProjectSummary } from "@/lib/schema";
 import { cn } from "@/lib/cn";
@@ -43,9 +44,11 @@ export function ProjectRow({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-4">
-              <h3 className="font-display text-title text-ink kinetic group-focus-within:[--kin-wdth:92] group-focus-within:[--kin-wght:700] group-hover:[--kin-wdth:92] group-hover:[--kin-wght:700]">
-                {project.title}
-              </h3>
+              <Morph name={`project-title-${project.slug}`}>
+                <h3 className="font-display text-title text-ink kinetic group-focus-within:[--kin-wdth:92] group-focus-within:[--kin-wght:700] group-hover:[--kin-wdth:92] group-hover:[--kin-wght:700]">
+                  {project.title}
+                </h3>
+              </Morph>
               <ArrowUpRight className="mt-1 size-5 shrink-0 text-ink-faint transition-all duration-500 group-focus-within:translate-x-0.5 group-focus-within:-translate-y-0.5 group-focus-within:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent motion-reduce:transform-none" />
             </div>
 

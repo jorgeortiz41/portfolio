@@ -7,6 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { TagList } from "@/components/ui/Tag";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { ArrowLeftLink, ProjectLinks } from "@/components/work/ProjectMeta";
+import { Morph } from "@/components/motion/Morph";
 import { getProject, getProjectSlugs, getAllProjects } from "@/lib/content";
 import { accentStyle } from "@/lib/accent";
 import { site } from "@/lib/site";
@@ -81,9 +82,11 @@ export default async function ProjectPage({
           {project.role}
         </p>
 
-        <h1 className="mt-4 max-w-4xl font-display text-display text-ink kinetic">
-          {project.title}
-        </h1>
+        <Morph name={`project-title-${project.slug}`}>
+          <h1 className="mt-4 max-w-4xl font-display text-display text-ink kinetic">
+            {project.title}
+          </h1>
+        </Morph>
 
         <p className="mt-6 max-w-2xl text-lg text-ink-muted">
           {project.tagline}

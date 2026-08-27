@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Grain } from "@/components/Grain";
 import { ScrollDriver } from "@/components/motion/ScrollDriver";
 import { PointerProvider } from "@/components/motion/PointerProvider";
+import { MagneticCursor } from "@/components/motion/MagneticCursor";
 import { site, getSiteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -117,6 +118,7 @@ export default function RootLayout({
           <SiteHeader />
           <main id="main">{children}</main>
           <SiteFooter />
+          <MagneticCursor />
         </PointerProvider>
         <Grain />
         <Analytics />

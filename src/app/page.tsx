@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ProjectRow } from "@/components/work/ProjectRow";
+import { CursorPreview } from "@/components/work/CursorPreview";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
+import { ScrambleText } from "@/components/kinetic/ScrambleText";
+import { NodeGraph } from "@/components/hero/NodeGraph";
 import { getFeaturedProjects } from "@/lib/content";
 import { currentExperience } from "@/data/experience";
 import { skills } from "@/data/skills";
@@ -15,14 +18,19 @@ export default function Home() {
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative isolate">
+      <section className="relative isolate overflow-hidden">
+        <NodeGraph />
         <Container className="py-24 sm:py-32 lg:py-40">
           <p className="font-mono text-xs tracking-[0.22em] text-ink-faint uppercase">
             {site.role} · {site.location}
           </p>
 
           <h1 className="kinetic-hero mt-8 max-w-5xl font-display text-hero text-ink kinetic">
-            I build AI systems that security teams can actually trust.
+            <ScrambleText
+              text="I build AI systems that security teams can actually trust."
+              delay={120}
+              speed={18}
+            />
           </h1>
 
           <p className="mt-8 max-w-xl text-lg text-ink-muted">
@@ -59,11 +67,17 @@ export default function Home() {
             <span id="work-heading">Selected work</span>
           </Eyebrow>
 
-          <ul className="mt-10">
-            {featured.map((project, i) => (
-              <ProjectRow key={project.slug} project={project} index={i + 1} />
-            ))}
-          </ul>
+          <CursorPreview projects={featured}>
+            <ul className="mt-10">
+              {featured.map((project, i) => (
+                <ProjectRow
+                  key={project.slug}
+                  project={project}
+                  index={i + 1}
+                />
+              ))}
+            </ul>
+          </CursorPreview>
 
           <div className="border-t border-rule pt-8">
             <Link
