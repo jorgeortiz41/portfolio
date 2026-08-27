@@ -81,7 +81,7 @@ export function NodeGraph() {
           y: Math.random() * height,
           vx: (Math.random() - 0.5) * 0.22,
           vy: (Math.random() - 0.5) * 0.22,
-          r: 1 + Math.random() * 1.6,
+          r: 1.7 + Math.random() * 1.9,
         });
       }
     };
@@ -112,7 +112,7 @@ export function NodeGraph() {
           const dy = a.y - b.y;
           const dist = Math.hypot(dx, dy);
           if (dist > LINK_DISTANCE) continue;
-          ctx.globalAlpha = (1 - dist / LINK_DISTANCE) * 0.16;
+          ctx.globalAlpha = (1 - dist / LINK_DISTANCE) * 0.2;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -125,7 +125,7 @@ export function NodeGraph() {
         const n = nodes[i] as Node;
         const near =
           1 - Math.min(Math.hypot(n.x - px, n.y - py) / POINTER_RADIUS, 1);
-        ctx.globalAlpha = 0.22 + near * 0.65;
+        ctx.globalAlpha = 0.34 + near * 0.55;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r + near * 1.8, 0, Math.PI * 2);
         ctx.fill();

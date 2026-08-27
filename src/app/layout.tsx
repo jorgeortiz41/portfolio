@@ -51,14 +51,15 @@ export const metadata: Metadata = {
   keywords: [
     "Jorge Ortiz",
     "software engineer",
-    "AI engineer",
-    "security engineer",
-    "OSINT",
-    "threat intelligence",
-    "machine learning",
+    "software architecture",
+    "systems design",
+    "AI systems",
     "full-stack developer",
-    "Next.js",
+    "backend engineer",
+    "machine learning",
     "Python",
+    "TypeScript",
+    "Next.js",
     "portfolio",
   ],
   alternates: { canonical: "/" },
@@ -83,16 +84,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf9f7" },
-    { media: "(prefers-color-scheme: dark)", color: "#08080a" },
-  ],
+  // Dark is the site default, so it is the unconditional theme colour.
+  themeColor: "#08080a",
 };
 
-/* Runs before first paint so an explicit theme choice never flashes the wrong
-   background. Kept deliberately tiny and failure-tolerant: if storage throws
-   (private mode, blocked site data) the system preference simply wins. */
-const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();`;
+/* Runs before first paint so an explicit light choice never flashes dark.
+   Dark needs no script — it is the default in CSS. Failure-tolerant: if storage
+   throws (private mode, blocked site data), the default simply stands. */
+const themeScript = `(function(){try{if(localStorage.getItem("theme")==="light"){document.documentElement.setAttribute("data-theme","light");}}catch(e){}})();`;
 
 export default function RootLayout({
   children,

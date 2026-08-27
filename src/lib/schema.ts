@@ -9,11 +9,26 @@ import { z } from "zod";
  * pointed error. There is no third outcome where it renders half-blank.
  */
 
+/**
+ * A metric must be COUNTABLE.
+ *
+ * The panel drifted into holding descriptors — "Fully local", "K-band" — which
+ * are not metrics and made the section mean something different on every
+ * project. The regex enforces that a value starts with a digit, so the rule
+ * cannot quietly erode as projects are added. A project with nothing countable
+ * omits the panel entirely rather than padding it.
+ */
 export const metricSchema = z.object({
   /** Short mono label, e.g. "OSINT sources". */
   label: z.string().min(1),
-  /** The number or short phrase, e.g. "14". */
-  value: z.string().min(1),
+  /** Must begin with a digit: "14", "0", "150", "3.2M". */
+  value: z
+    .string()
+    .min(1)
+    .regex(
+      /^\d/,
+      "metric values must be countable and start with a digit — descriptors belong in the stack or the body",
+    ),
 });
 
 export const projectFrontmatterSchema = z.object({

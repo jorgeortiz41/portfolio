@@ -6,17 +6,23 @@ period: Jun — Aug 2026
 accent: 38
 featured: true
 order: 1
-stack:
-  - Python
-  - Pydantic AI
-  - FastAPI
-  - OSINT
-  - STIX 2.1
-  - MITRE ATT&CK
 summary: >-
   An AI-assisted OSINT platform built at Evertec that enriches indicators across
   14 intelligence sources and generates auditable threat briefings — with a
   verification layer that cites facts independently of the language model.
+cover:
+  src: /argus-placeholder.svg
+  alt: ARGUS threat intelligence platform
+  width: 600
+  height: 340
+stack:
+  - Python
+  - Pydantic AI
+  - FastAPI
+  - MCP
+  - PostgreSQL
+  - Logfire
+  - Docker
 metrics:
   - label: OSINT sources
     value: "14"
@@ -24,15 +30,8 @@ metrics:
     value: "7"
   - label: LLM-sourced claims
     value: "0"
-  - label: Export formats
-    value: STIX + DOCX
-cover:
-  src: /argus-placeholder.svg
-  alt: ARGUS threat intelligence platform
-  width: 600
-  height: 340
 links:
-  live: https://www.evertec.com/
+  repo: https://github.com/jorgeortiz41/Argus
 ---
 
 ## Context
@@ -106,7 +105,15 @@ briefing are frequently not the humans who run the platform.
 
 The whole thing is reachable as both a CLI and a web GUI over FastAPI — the CLI
 because analysts live in terminals and it scripts cleanly, the GUI because the
-relationship graph is genuinely easier to read than to describe.
+relationship graph is genuinely easier to read than to describe. Enrichment
+sources are exposed to the agent over **MCP**, so adding an integration is a
+server registration rather than a change to the agent's own code.
+
+Every agent run is traced with **Logfire**. That matters more here than in a
+typical service: when an analyst questions a claim, the useful answer is not
+"the model said so" but the actual sequence of tool calls, arguments and
+responses that produced it. Observability is part of the auditability argument,
+not an operational afterthought.
 
 ## Impact
 

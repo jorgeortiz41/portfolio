@@ -6,26 +6,26 @@ period: "2025"
 accent: 250
 featured: true
 order: 2
-stack:
-  - FastAPI
-  - PostgreSQL
-  - Next.js
-  - scikit-learn
-  - XGBoost
 summary: >-
   A full-stack analytics platform that ingests Riot Games match data, computes
   player performance metrics, and serves seven trained models behind interactive
   dashboards.
-metrics:
-  - label: Models deployed
-    value: "7"
-  - label: Interface
-    value: Live dashboards
 cover:
   src: /esports-placeholder.svg
   alt: Esports analytics dashboard
   width: 600
   height: 340
+stack:
+  - FastAPI
+  - PostgreSQL
+  - SQLAlchemy
+  - Next.js
+  - TypeScript
+  - scikit-learn
+  - XGBoost
+metrics:
+  - label: Models deployed
+    value: "7"
 links:
   live: https://capstone-esports.vercel.app/
 ---

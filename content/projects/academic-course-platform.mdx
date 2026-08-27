@@ -6,26 +6,23 @@ period: "2025"
 accent: 300
 featured: true
 order: 3
-stack:
-  - Flask
-  - PostgreSQL
-  - pgvector
-  - Ollama
-  - ETL
 summary: >-
   A full-stack academic data platform with a PostgreSQL backend, ETL pipeline and
   REST API, plus a locally-hosted RAG chatbot that answers natural-language
   questions about course syllabi.
-metrics:
-  - label: Inference
-    value: Fully local
-  - label: Vector store
-    value: pgvector
 cover:
   src: /academic-placeholder.svg
   alt: Academic course management platform
   width: 600
   height: 340
+stack:
+  - Flask
+  - PostgreSQL
+  - pgvector
+  - LangChain
+  - Ollama
+  - Streamlit
+  - sentence-transformers
 links:
   repo: https://github.com/jorgeortiz41/fall2025v2-platano_db
 ---
@@ -64,10 +61,13 @@ without watching a meter.
 
 ## Architecture
 
-An ETL pipeline normalizes syllabus and course data into PostgreSQL. A Flask REST
-API serves both the structured queries and the chat endpoint. Retrieval runs
-against pgvector, and the retrieved context is passed to a locally-hosted model.
-Analytics dashboards read from the same schema.
+An ETL pipeline parses syllabus PDFs and normalizes course data into PostgreSQL.
+A Flask REST API serves both the structured queries and the chat endpoint.
+Retrieval runs against pgvector over `all-mpnet-base-v2` embeddings, with
+**LangChain** handling chunking and the retrieval chain, and `llama3.2` served
+locally through Ollama. Analytics dashboards are **Streamlit**, reading the same
+schema — a deliberate choice to spend the effort on the data layer rather than
+on building a bespoke front end for an internal tool.
 
 Keeping one database as the single source of truth for both the structured and
 the semantic layer is the decision the whole design rests on.

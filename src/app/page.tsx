@@ -54,16 +54,16 @@ export default function Home() {
 
           <h1 className="kinetic-hero mt-8 max-w-5xl font-display text-hero text-ink kinetic">
             <ScrambleText
-              text="I build AI systems that security teams can actually trust."
+              text="I build software for problems where a confidently wrong answer is the expensive one."
               delay={120}
               speed={18}
             />
           </h1>
 
           <p className="mt-8 max-w-xl text-lg text-ink-muted">
-            Currently building auditable threat intelligence tooling at Evertec.
-            Previously full-stack work at LeadWire and Red Ventures, and
-            research engineering at the Arecibo Observatory.
+            Six years across radio astronomy instrumentation, SMS marketing
+            platforms, esports analytics and threat intelligence. Currently at
+            Evertec, designing AI systems that have to be auditable.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -192,7 +192,8 @@ export default function Home() {
             <span id="contact-heading">Contact</span>
           </Eyebrow>
           <p className="kinetic-enter mt-8 max-w-3xl font-display text-display text-ink kinetic">
-            Looking for a software engineering role where AI meets security.
+            Looking for software engineering work on systems that have to be
+            right.
           </p>
           <a
             href={`mailto:${site.email}`}

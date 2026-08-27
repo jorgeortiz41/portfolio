@@ -58,24 +58,28 @@ export default function AboutPage() {
         <Eyebrow>About</Eyebrow>
 
         <h1 className="mt-6 max-w-4xl font-display text-display text-ink kinetic">
-          Engineering at the seam between AI and security.
+          Software for problems where being plausibly wrong is the expensive
+          failure.
         </h1>
 
         <div className="prose mt-10 max-w-2xl space-y-5 text-ink-muted">
           <p className="leading-[1.75]">
-            I&apos;m a software engineer from {site.location}. Most of my work
-            sits where machine learning meets systems that have to be correct —
-            threat intelligence tooling, analytics platforms, and research
-            software where a confidently wrong answer is worse than no answer at
-            all.
+            I&apos;m a software engineer from {site.location}. The domains have
+            varied a lot — radio telescope instrumentation, an SMS marketing
+            platform, esports analytics, threat intelligence — but the problems
+            rhyme: systems where being plausibly wrong is worse than being slow,
+            and where the hard part is the architecture around the clever bit,
+            not the clever bit.
           </p>
           <p className="leading-[1.75]">
-            That bias shows up in how I build. On ARGUS I put the language model
-            in charge of orchestration and phrasing, but never of facts, so
-            every claim in a generated briefing traces back to a cited API
-            response. On the academic platform, a data-residency constraint
-            pushed the whole design toward local inference and a single database
-            holding both the vectors and the relational data.
+            That shapes how I design with AI. On ARGUS the language model
+            orchestrates and phrases, but never sources a fact — every claim in
+            a generated briefing traces back to a cited API response, by
+            construction. On the academic platform a data-residency constraint
+            pushed the design toward local inference and a single database
+            holding both the vectors and the relational data. In both cases the
+            model is a component with a failure mode, designed for like any
+            other dependency that can be wrong.
           </p>
           <p className="leading-[1.75]">
             Before that: full-stack product work at LeadWire and Red Ventures,

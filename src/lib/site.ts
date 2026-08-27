@@ -1,12 +1,12 @@
 export const site = {
   name: "Jorge Ortiz",
-  title: "Jorge Ortiz — Software Engineer · AI & Security",
+  title: "Jorge Ortiz — Software Engineer",
   shortTitle: "Jorge Ortiz",
   role: "Software Engineer",
-  focus: "AI · Security · Full-Stack",
+  focus: "Software Architecture · AI Systems",
   location: "Puerto Rico",
   description:
-    "Software engineer building AI systems for security and research — OSINT threat intelligence, ML analytics platforms, and full-stack products.",
+    "Software engineer working on systems where correctness matters — threat intelligence, radio science instrumentation, analytics platforms, and the AI components inside them.",
   email: "jortizsoftware@gmail.com",
   resume: "/resume.pdf",
   socials: {

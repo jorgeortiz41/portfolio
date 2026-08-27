@@ -2,25 +2,12 @@
 
 /* ==========================================================================
    0. dark: variant
-   The theme is tri-state — system by default, or an explicit choice stamped
-   on <html data-theme>. Tailwind's stock `dark:` handles only one of those,
-   so it is redefined here to cover both: the media query wins unless the
-   viewer has explicitly chosen light, and an explicit dark always wins.
+   Dark is the default here, not a system-preference branch — this design was
+   built dark-first and light is the deliberate opt-out. So `dark:` applies
+   unless the viewer has explicitly chosen light.
    ========================================================================== */
 
-@custom-variant dark {
-  @media (prefers-color-scheme: dark) {
-    &:where(
-      :root:not([data-theme="light"]),
-      :root:not([data-theme="light"]) *
-    ) {
-      @slot;
-    }
-  }
-  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) {
-    @slot;
-  }
-}
+@custom-variant dark (&:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *));
 
 /* ==========================================================================
    1. Animatable custom properties
@@ -66,57 +53,12 @@
 
 /* ==========================================================================
    2. Theme tokens
-   Light is defined on bare :root. Dark is redefined twice: under
-   prefers-color-scheme (guarded so an explicit light choice wins) and under
-   [data-theme="dark"] (so the toggle wins in both directions).
+   Dark is the default, applied on bare :root. Light is opt-in via an explicit
+   [data-theme="light"] stamped by the toggle and by the pre-paint script in
+   the layout, so it never flashes.
    ========================================================================== */
 
 :root {
-  color-scheme: light;
-
-  --bg: oklch(0.985 0.003 85);
-  --bg-elevated: oklch(0.962 0.004 85);
-  --ink: oklch(0.16 0.006 60);
-  --ink-muted: oklch(0.44 0.006 60);
-  --ink-faint: oklch(0.62 0.005 60);
-  --rule: oklch(0.16 0.006 60 / 0.14);
-  --rule-strong: oklch(0.16 0.006 60 / 0.28);
-
-  /* Lightness + chroma are held per theme so that any hue a project picks is
-     legible against that theme's background. A project supplies only --accent-h.
-
-     These two numbers are measured, not guessed. Swept across all 36 hue steps
-     (0-350) against this theme's background, L=0.48/C=0.15 yields a worst-case
-     WCAG contrast of 5.26:1 (at hue 190, cyan — the weakest hue in light mode).
-     Raising L to 0.52 drops that to 4.49 and fails AA. Do not raise it without
-     re-running the sweep in the browser. */
-  --accent-l: 0.48;
-  --accent-c: 0.15;
-
-  --grain-opacity: 0.035;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --bg: oklch(0.125 0.005 280);
-    --bg-elevated: oklch(0.175 0.006 280);
-    --ink: oklch(0.97 0.003 85);
-    --ink-muted: oklch(0.73 0.005 85);
-    --ink-faint: oklch(0.55 0.006 85);
-    --rule: oklch(0.97 0.003 85 / 0.12);
-    --rule-strong: oklch(0.97 0.003 85 / 0.26);
-
-    /* Worst case across all 36 hues: 9.64:1 (hue 20). Wide margin. */
-    --accent-l: 0.8;
-    --accent-c: 0.145;
-
-    --grain-opacity: 0.05;
-  }
-}
-
-:root[data-theme="dark"] {
   color-scheme: dark;
 
   --bg: oklch(0.125 0.005 280);
@@ -127,10 +69,32 @@
   --rule: oklch(0.97 0.003 85 / 0.12);
   --rule-strong: oklch(0.97 0.003 85 / 0.26);
 
+  /* Worst case across all 36 hues: 9.64:1 (hue 20). Wide margin. */
   --accent-l: 0.8;
   --accent-c: 0.145;
 
   --grain-opacity: 0.05;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: oklch(0.985 0.003 85);
+  --bg-elevated: oklch(0.962 0.004 85);
+  --ink: oklch(0.16 0.006 60);
+  --ink-muted: oklch(0.44 0.006 60);
+  --ink-faint: oklch(0.62 0.005 60);
+  --rule: oklch(0.16 0.006 60 / 0.14);
+  --rule-strong: oklch(0.16 0.006 60 / 0.28);
+
+  /* Measured, not guessed. Swept across all 36 hue steps against this theme's
+     background, L=0.48/C=0.15 yields a worst-case WCAG contrast of 5.26:1 (at
+     hue 190, cyan — the weakest hue in light mode). Raising L to 0.52 drops
+     that to 4.49 and fails AA. Do not raise it without re-running the sweep. */
+  --accent-l: 0.48;
+  --accent-c: 0.15;
+
+  --grain-opacity: 0.035;
 }
 
 /* Composed accent. Every accent in the site derives from these three numbers. */
@@ -165,7 +129,9 @@
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   /* Fluid display sizes. The hero is the only true "display" size. */
-  --text-hero: clamp(2.75rem, 9vw, 7rem);
+  /* Sized for the actual headline, not for the largest number that fits: at
+     7rem this copy ran to 5 lines and 515px, over half a 900px viewport. */
+  --text-hero: clamp(2.25rem, 5.6vw, 4.5rem);
   --text-hero--line-height: 0.92;
   --text-display: clamp(2rem, 5.5vw, 4rem);
   --text-display--line-height: 0.98;
@@ -323,6 +289,13 @@
   pointer-events: none;
   opacity: var(--grain-opacity);
   mix-blend-mode: overlay;
+}
+
+/* Set by MagneticCursor while the custom dot is active. `!important` covers
+   elements that set their own cursor (buttons, links, summary). */
+.cursor-hidden,
+.cursor-hidden * {
+  cursor: none !important;
 }
 
 /* ==========================================================================

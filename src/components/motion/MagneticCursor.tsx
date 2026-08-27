@@ -14,6 +14,15 @@ export function MagneticCursor() {
   const { subscribe, enabled } = usePointer();
   const dot = useRef<HTMLDivElement>(null);
 
+  // Hide the OS pointer so only the dot shows. Scoped to exactly the cases
+  // where the dot actually renders (fine pointer, motion allowed) and reverted
+  // on unmount, so a touch or reduced-motion visitor never loses their cursor.
+  useEffect(() => {
+    if (!enabled) return;
+    document.documentElement.classList.add("cursor-hidden");
+    return () => document.documentElement.classList.remove("cursor-hidden");
+  }, [enabled]);
+
   useEffect(() => {
     if (!enabled) return;
     const node = dot.current;
