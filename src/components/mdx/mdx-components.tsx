@@ -12,7 +12,7 @@ import { ArrowUpRight } from "@/components/icons";
 function H2({ children, ...props }: ComponentPropsWithoutRef<"h2">) {
   return (
     <h2
-      className="mt-16 scroll-mt-24 border-t border-rule pt-8 font-display text-title text-ink kinetic first:mt-0"
+      className="kinetic-enter mt-16 scroll-mt-24 border-t border-rule pt-8 font-display text-title text-ink kinetic first:mt-0"
       {...props}
     >
       {children}

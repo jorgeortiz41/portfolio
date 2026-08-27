@@ -6,6 +6,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Grain } from "@/components/Grain";
+import { ScrollDriver } from "@/components/motion/ScrollDriver";
+import { PointerProvider } from "@/components/motion/PointerProvider";
 import { site, getSiteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -110,9 +112,12 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        <ScrollDriver />
+        <PointerProvider>
+          <SiteHeader />
+          <main id="main">{children}</main>
+          <SiteFooter />
+        </PointerProvider>
         <Grain />
         <Analytics />
         <SpeedInsights />

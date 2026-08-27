@@ -21,7 +21,7 @@ export default function Home() {
             {site.role} · {site.location}
           </p>
 
-          <h1 className="mt-8 max-w-5xl font-display text-hero text-ink kinetic">
+          <h1 className="kinetic-hero mt-8 max-w-5xl font-display text-hero text-ink kinetic">
             I build AI systems that security teams can actually trust.
           </h1>
 
@@ -150,7 +150,7 @@ export default function Home() {
           <Eyebrow>
             <span id="contact-heading">Contact</span>
           </Eyebrow>
-          <p className="mt-8 max-w-3xl font-display text-display text-ink kinetic">
+          <p className="kinetic-enter mt-8 max-w-3xl font-display text-display text-ink kinetic">
             Looking for a software engineering role where AI meets security.
           </p>
           <a

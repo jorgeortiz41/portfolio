@@ -47,6 +47,15 @@
   initial-value: 14;
 }
 
+/* Normalised scroll velocity, 0-1, written once per frame by ScrollDriver.
+   Registered so CSS can do arithmetic on it — the kinetic hero derives its
+   font axes from this in pure CSS rather than JS touching each element. */
+@property --scroll-v {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 /* Per-project accent hue, 0-360. Inherits so a single inline style on a page
    wrapper re-colors everything beneath it, with no client JS. */
 @property --accent-h {
@@ -237,6 +246,24 @@
 /* Section headings widen as they enter the viewport. Pure CSS: this runs off
    the main thread where animation-timeline is supported, and simply does
    nothing where it isn't. */
+/* The hero derives its axes from scroll velocity entirely in CSS. JS writes one
+   number to the document; no per-element style writes, no tween loop.
+
+   WEIGHT ONLY, deliberately. Measured on this headline: animating `wght`
+   400->740 never changes the line count, while animating `wdth` reflows 4 lines
+   to 3 — even at a 6% delta, because narrower glyphs genuinely fit more words
+   per line. On the hero a reflow relayouts the entire page below it on every
+   frame of a fast scroll, which is exactly the cost this design set out to
+   avoid. The width axis is therefore reserved for single-line display text
+   (.kinetic-enter headings, project row titles) where reflow cannot cascade.
+
+   Range stays inside Bricolage Grotesque's real axis: wght 200-800. */
+.kinetic-hero {
+  --kin-wght: calc(400 + var(--scroll-v) * 340);
+  /* Velocity is already smoothed in JS; a transition on top would fight it. */
+  transition: none;
+}
+
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .kinetic-enter {
@@ -257,6 +284,30 @@
     --kin-wdth: 100;
     --kin-wght: 620;
     opacity: 1;
+  }
+}
+
+/* Scroll reveal with no JS and no observer. Where animation-timeline is
+   unsupported the content simply renders — it never depends on the animation
+   to become visible. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -292,7 +343,8 @@
     scroll-behavior: auto !important;
   }
 
-  .kinetic {
+  .kinetic,
+  .kinetic-hero {
     font-variation-settings:
       "wght" 500,
       "wdth" 100;
