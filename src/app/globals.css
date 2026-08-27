@@ -1,6 +1,28 @@
 @import "tailwindcss";
 
 /* ==========================================================================
+   0. dark: variant
+   The theme is tri-state — system by default, or an explicit choice stamped
+   on <html data-theme>. Tailwind's stock `dark:` handles only one of those,
+   so it is redefined here to cover both: the media query wins unless the
+   viewer has explicitly chosen light, and an explicit dark always wins.
+   ========================================================================== */
+
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(
+      :root:not([data-theme="light"]),
+      :root:not([data-theme="light"]) *
+    ) {
+      @slot;
+    }
+  }
+  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) {
+    @slot;
+  }
+}
+
+/* ==========================================================================
    1. Animatable custom properties
    Registering these lets the browser interpolate them natively. Without
    @property, `--kin-wght` is just a string and transitions snap instead of

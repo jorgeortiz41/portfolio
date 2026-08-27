@@ -1,0 +1,87 @@
+---
+title: Academic Course Platform
+tagline: A syllabus you can ask questions, backed by a real ETL pipeline rather than a vector-store demo.
+role: Full-stack engineer
+period: "2025"
+accent: 300
+featured: true
+order: 3
+stack:
+  - Flask
+  - PostgreSQL
+  - pgvector
+  - Ollama
+  - ETL
+summary: >-
+  A full-stack academic data platform with a PostgreSQL backend, ETL pipeline and
+  REST API, plus a locally-hosted RAG chatbot that answers natural-language
+  questions about course syllabi.
+metrics:
+  - label: Inference
+    value: Fully local
+  - label: Vector store
+    value: pgvector
+cover:
+  src: /academic-placeholder.svg
+  alt: Academic course management platform
+  width: 600
+  height: 340
+links:
+  repo: https://github.com/jorgeortiz41/fall2025v2-platano_db
+---
+
+## Context
+
+Course information is scattered across syllabi, catalogs and departmental
+spreadsheets in formats that were designed for printing, not querying. Answering
+a question as ordinary as "which courses cover this topic and what are their
+prerequisites" means reading several PDFs.
+
+## Problem
+
+Two problems, and the second one is the one that shaped the project.
+
+The first is straightforward: get heterogeneous academic data into a queryable
+schema. That is ETL work.
+
+The second: make it answerable in natural language **without sending institutional
+course data to a third-party API.** That constraint ruled out the default
+architecture that most RAG tutorials assume, and drove the rest of the design.
+
+## Approach
+
+Rather than adding a separate vector database alongside PostgreSQL, I used
+**pgvector**, keeping embeddings in the same database as the structured course
+data. This matters more than it sounds: a question like "300-level courses that
+cover signal processing" is half semantic search and half a `WHERE` clause, and
+with the vectors and the relational data in one store, that is a single query
+rather than an application-layer join between two systems.
+
+For inference, **Ollama** runs models locally. That satisfies the data-residency
+constraint directly, and it removes per-query cost from the equation — which
+changes what is reasonable to build, since retrieval quality can be iterated on
+without watching a meter.
+
+## Architecture
+
+An ETL pipeline normalizes syllabus and course data into PostgreSQL. A Flask REST
+API serves both the structured queries and the chat endpoint. Retrieval runs
+against pgvector, and the retrieved context is passed to a locally-hosted model.
+Analytics dashboards read from the same schema.
+
+Keeping one database as the single source of truth for both the structured and
+the semantic layer is the decision the whole design rests on.
+
+## Impact
+
+The platform answers natural-language questions grounded in real institutional
+course data, entirely on self-hosted infrastructure, with no external API calls
+and no per-query cost.
+
+## What I'd do differently
+
+Chunking strategy was chosen early and never revisited. Syllabi have strong
+document structure — sections, prerequisite blocks, learning outcomes — and
+chunking on that structure rather than on length would likely improve retrieval
+noticeably. I would also add a retrieval evaluation set early; without one,
+"did that change help?" is answered by impression rather than measurement.

@@ -1,0 +1,89 @@
+---
+title: Esports Performance Analytics
+tagline: Turning raw Riot match data into predictions a coaching staff can act on.
+role: Full-stack engineer — capstone team
+period: "2025"
+accent: 250
+featured: true
+order: 2
+stack:
+  - FastAPI
+  - PostgreSQL
+  - Next.js
+  - scikit-learn
+  - XGBoost
+summary: >-
+  A full-stack analytics platform that ingests Riot Games match data, computes
+  player performance metrics, and serves seven trained models behind interactive
+  dashboards.
+metrics:
+  - label: Models deployed
+    value: "7"
+  - label: Interface
+    value: Live dashboards
+cover:
+  src: /esports-placeholder.svg
+  alt: Esports analytics dashboard
+  width: 600
+  height: 340
+links:
+  live: https://capstone-esports.vercel.app/
+---
+
+## Context
+
+Competitive teams generate an enormous amount of match telemetry and use
+surprisingly little of it. The data is available through the Riot Games API, but
+between the raw API and anything a coach would act on sits a lot of unglamorous
+work: ingestion, normalization, metric definition, and a presentation layer that
+a non-engineer will actually open.
+
+## Problem
+
+The interesting question was never "can we predict match outcomes" — plenty of
+models do that, and a coaching staff cannot do much with a win probability.
+The useful question is narrower: **which specific, controllable player
+behaviours correlate with better outcomes, and can we surface them per player?**
+
+That is a harder framing, because it means the model output has to be
+attributable to something a player can change.
+
+## Approach
+
+I split the system along the boundary that mattered: ingestion and feature
+computation on one side, modelling on the other, so that changing a metric
+definition did not mean retraining from scratch.
+
+Match data flows through an ingestion layer into PostgreSQL, where performance
+metrics are computed as a derived layer rather than at query time. That choice
+was about the dashboards — interactive filtering is only pleasant when the
+expensive aggregation has already happened.
+
+On top of that, seven models trained with scikit-learn and XGBoost handle
+prediction and recommendation. Gradient boosting rather than a deep model was a
+deliberate choice: on tabular match data it performs at least as well, trains
+fast enough to iterate on, and — importantly for the framing above — supports
+feature attribution that survives being explained to a non-technical reader.
+
+## Architecture
+
+A FastAPI service sits between PostgreSQL and a Next.js front end. The API
+serves both the aggregate metrics and the model inferences, which keeps the
+front end free of any modelling concerns — it asks for a player's numbers and
+renders them.
+
+The dashboards are the actual product. The models are only useful to the extent
+that their output is legible, so the interface leads with per-player metrics and
+the recommendation attached to each, rather than with model confidence.
+
+## Impact
+
+The platform closes the loop from raw API telemetry to a per-player
+recommendation in one system, deployed and publicly reachable. Seven models are
+in production behind the dashboards.
+
+## What I'd do differently
+
+Metric definitions ended up spread between SQL and Python. They should live in
+one place with one definition — as it stands, verifying that a dashboard number
+and a model feature mean the same thing requires reading both.
