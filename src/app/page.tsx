@@ -10,13 +10,40 @@ import { NodeGraph } from "@/components/hero/NodeGraph";
 import { getFeaturedProjects } from "@/lib/content";
 import { currentExperience } from "@/data/experience";
 import { skills } from "@/data/skills";
-import { site } from "@/lib/site";
+import { site, getSiteUrl } from "@/lib/site";
 
 export default function Home() {
   const featured = getFeaturedProjects();
+  const siteUrl = getSiteUrl();
+
+  // Person schema — the textbook structured-data case for a portfolio, and
+  // what lets search engines connect this site to the GitHub/LinkedIn profiles.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: site.name,
+    url: siteUrl,
+    email: `mailto:${site.email}`,
+    jobTitle: site.role,
+    description: site.description,
+    address: { "@type": "PostalAddress", addressRegion: site.location },
+    sameAs: [site.socials.github, site.socials.linkedin],
+    knowsAbout: [
+      "Artificial Intelligence",
+      "Cyber Threat Intelligence",
+      "OSINT",
+      "Machine Learning",
+      "Full-Stack Development",
+    ],
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* ---------------------------------------------------------------- Hero */}
       <section className="relative isolate overflow-hidden">
         <NodeGraph />
