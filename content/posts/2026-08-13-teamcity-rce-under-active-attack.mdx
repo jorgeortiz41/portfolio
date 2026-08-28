@@ -1,0 +1,52 @@
+---
+title: "A Critical, Unauthenticated RCE in JetBrains TeamCity Is Under Active Attack — Patch Now"
+date: "2026-08-13"
+summary: "CVE-2026-63077 lets an attacker run code on a self-hosted TeamCity server with no credentials at all. It went from disclosure to active exploitation in under two weeks."
+topic: software-engineering
+tags: [security, ci-cd, teamcity, cve]
+sources:
+  - title: "Critical Security Issue Affecting TeamCity On-Premises (CVE-2026-63077)"
+    url: "https://blog.jetbrains.com/teamcity/2026/07/cve-2026-63077/"
+    publisher: "The JetBrains Blog"
+  - title: "CVE-2026-63077: Additional Guidance Following Reports of Active Exploitation"
+    url: "https://blog.jetbrains.com/teamcity/2026/08/cve-2026-63077-update/"
+    publisher: "The JetBrains Blog"
+  - title: "Rapid7 Analysis of CVE-2026-63077"
+    url: "https://www.rapid7.com/blog/post/etr-cve-2026-63077-critical-unauthenticated-remote-code-execution-in-jetbrains-teamcity/"
+    publisher: "Rapid7"
+  - title: "CISA Flags TeamCity CVE-2026-63077 RCE Flaw Under Active Exploitation"
+    url: "https://thehackernews.com/2026/08/cisa-flags-teamcity-cve-2026-63077-rce.html"
+    publisher: "The Hacker News"
+---
+
+Picture this: somewhere on your network sits a build server that every commit, every credential, and every production deployment eventually passes through. Now picture an attacker who doesn't need a password, a phishing email, or an insider to take it over — just an HTTP connection. That's not a hypothetical this week. It's CVE-2026-63077, a critical, unauthenticated remote code execution vulnerability in JetBrains TeamCity, and as of early August 2026 it's being actively exploited in the wild.
+
+If your organization runs a self-hosted TeamCity server, this is the kind of story that should interrupt your sprint planning.
+
+## What Exactly Is Broken
+
+JetBrains disclosed CVE-2026-63077 on July 27, 2026, describing a flaw in TeamCity's agent polling protocol. In plain terms, the vulnerability lets an attacker who can merely reach the server over HTTP(S) — no login, no API key, no valid session — execute arbitrary operating system commands with the privileges of the TeamCity server process itself. Security researchers at Rapid7, who published a detailed technical analysis, rated the flaw a 9.8 out of 10 on the CVSS scale, just about as severe as vulnerability scoring gets.
+
+What makes this particularly nasty is what TeamCity actually is: a continuous integration and continuous deployment server. It's the connective tissue between source code and production. Rapid7's advisory put it bluntly — attackers who exploit the vulnerability can read stored credentials and compromise CI/CD pipeline integrity. That's not just "an attacker got a shell on a box." That's an attacker potentially sitting inside the pipeline that builds and ships your software, with the ability to steal secrets, tamper with build artifacts, or slip malicious code into a release before it ever reaches a human reviewer.
+
+## From Disclosure to Active Exploitation in Under Two Weeks
+
+The timeline here is the part that should really grab your attention. JetBrains' initial advisory landed on July 27. By August 7, the company was forced to publish a follow-up post confirming what many security teams had feared: "active exploitation, as well as attempted exploitation, targeting unpatched TeamCity servers." CISA subsequently flagged the flaw for widespread attention, and outlets including The Hacker News and SecurityWeek reported hackers moving quickly once the details — and, likely, working proof-of-concept exploit code — became available.
+
+This is a familiar and uncomfortable pattern in software security: a vendor discloses a bug responsibly, patches ship, and then the clock starts ticking as attackers reverse-engineer the fix to build working exploits faster than defenders can patch. For an unauthenticated RCE in an internet- or intranet-facing CI/CD tool, that window can be measured in days, not months.
+
+## Who's Affected, and What to Do About It
+
+According to JetBrains, all TeamCity versions prior to 2025.11.7 and 2026.1.3 are vulnerable. The fix is straightforward in principle: update immediately to one of those patched releases. For teams that can't roll out an upgrade right away, JetBrains has also released a security patch plugin compatible with TeamCity 2017.1 and later, which closes the hole without requiring a full version bump. If you're running TeamCity Cloud rather than a self-hosted instance, JetBrains says no action is required on your end — the vendor has already handled it.
+
+For anyone who suspects they may already be compromised, JetBrains and Rapid7 both point to specific forensic breadcrumbs worth hunting for in your logs: entries referencing `com.thoughtworks.xstream.converters.ConversionException`, which can indicate exploitation attempts, and any unauthorized build agents whose names start with "scan" — a naming pattern that's shown up in observed attacks. If either shows up in your environment, treat it as a potential breach, not just a vulnerability, and pull in your incident response process accordingly.
+
+## The Bigger Lesson for Engineering Teams
+
+It's tempting to file this under "yet another CVE" and move on once the patch is applied, but there's a broader takeaway worth sitting with. CI/CD infrastructure has quietly become one of the highest-value targets in modern software supply chains, precisely because it sits at a chokepoint between code and customers. A compromised build server doesn't just expose one application — it can compromise everything that server touches, retroactively and going forward, until the intrusion is found and eradicated.
+
+Teams that treat their build infrastructure with the same access controls, network segmentation, and patch urgency they apply to production systems will weather incidents like this one far better than teams that think of CI/CD as "internal tooling" and therefore lower priority. Practical steps worth revisiting regardless of whether you run TeamCity specifically: restrict which networks can reach your CI/CD servers at all, rotate credentials that pipelines have touched, keep automated patch alerts wired directly to the people who own that infrastructure, and rehearse what your team would actually do if a build server were compromised before you need to find out in real time.
+
+## Takeaway
+
+CVE-2026-63077 is a stark reminder that the tools engineering teams use to ship software can themselves become the softest target in the whole chain. If you're running a self-hosted TeamCity instance below version 2025.11.7 or 2026.1.3, patch today — not after the next sprint, not after the retro. The exploitation window is already open.

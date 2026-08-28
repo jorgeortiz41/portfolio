@@ -1,0 +1,50 @@
+---
+title: "The Great Unbundling: How AI Is Hollowing Out Software Engineering's Middle Class"
+date: "2026-08-14"
+summary: "A 24,506-line pull request nobody on the team could fully explain kicked off the argument. The volume advantage that separated mid-level engineers from juniors is the part AI erases."
+topic: software-engineering
+tags: [careers, ai-agents, code-review]
+sources:
+  - title: "AI is hollowing out the middle class of software engineering"
+    url: "https://northeasttimes.com/2026/08/13/ai-is-hollowing-out-the-middle-class-of-software-engineering/"
+    publisher: "Northeast Times"
+  - title: "AI is removing the middle class of software engineering"
+    url: "https://blog.florianherrengt.com/ai-removing-middle-class-software-engineering.html"
+    publisher: "Florian Herrengt"
+---
+
+A single pull request, 24,506 lines long, sparked one of the most contentious debates software engineering has had in years. Nobody on the team that received it — including, reportedly, the engineer who submitted it — could fully explain how the code worked. It had been generated largely by an AI coding agent, stitched together across dozens of abstraction layers, and it passed the tests. That was almost the problem: it worked well enough to ship, and not well enough to trust.
+
+The engineer who wrote about the incident, Florian Herrengt, didn't intend to start a movement. But his post, "AI is removing the middle class of software engineering," landed on Hacker News with enough force to rack up over 300 points and more than 360 comments in a matter of days — and it crystallized something a lot of developers had been feeling but hadn't quite said out loud.
+
+## The Bimodal Effect
+
+Herrengt's core argument isn't that AI makes engineers worse. It's that AI is a force multiplier, and force multipliers don't affect everyone equally. A senior engineer who deeply understands system design, tradeoffs, and failure modes can use an AI coding agent to move dramatically faster while staying in control of the architecture. A less experienced engineer, or one who never quite developed strong instincts for structure and edge cases, can use the same tool to generate a mountain of plausible-looking code at a pace that used to be impossible.
+
+The catch is that "plausible-looking" and "correct" are not the same thing. Herrengt compared the dynamic to buying luxury goods on credit: the benefits show up immediately, and the bill arrives later, usually in the form of a production incident nobody can debug because nobody actually understands the system that AI assembled. The middle tier of engineering — the reliable, competent-but-not-brilliant developers who used to form the bulk of most teams — is the group most exposed to this squeeze. Their output is now easy to replicate at volume, but the judgment that used to differentiate them from junior engineers is precisely what AI tools don't reliably provide.
+
+## The Numbers Behind the Anxiety
+
+It's not just a vibe. A GitHub analysis cited in the discussion found that AI coding agents have increased raw code output roughly eightfold on teams that have adopted them heavily — but actual shipped releases only grew by about 30%. In other words, engineers (or their AI agents) are writing far more code, but a much smaller fraction of it is turning into finished, deployable work. That gap is where technical debt accumulates.
+
+There's also an older but still relevant data point making the rounds again: a 2019 study found that developers spend only about 9% of their time actually writing code, with the other 91% consumed by meetings, debugging, code review, and verification. If AI dramatically increases the 9% while doing little to reduce the 91% — or actively increases the debugging and verification burden — the net productivity gain looks a lot smaller than the raw code-generation numbers suggest.
+
+Perhaps the most sobering statistic comes from a Federal Reserve analysis suggesting that software engineer employment growth has already slowed by roughly 3 percentage points annually, a shift researchers are attributing at least partly to AI-driven changes in how teams are staffed and structured.
+
+## Not Everyone Buys the Narrative
+
+Not every part of this story is about capability, though. A separate piece of research from Normaltech.ai adds a healthy dose of skepticism to the "AI is replacing engineers" framing. In a survey of U.S. hiring managers, 59% admitted they emphasize AI when explaining layoffs or hiring freezes — because it plays better with employees, shareholders, and the press than admitting the real driver is budget cuts, overhiring correction, or a slowing macro environment. AI becomes a convenient, forward-looking justification for decisions that would otherwise look like retrenchment.
+
+That doesn't mean the technological shift isn't real. It means two things are probably happening at once: AI genuinely is changing what kind of engineering work is valuable, and companies are using that narrative as cover for cost-cutting that may have happened anyway. Untangling those two threads is difficult from the outside, and even harder from inside a team facing a reorg.
+
+## The Price War Adding Pressure
+
+Compounding the anxiety is a fast-moving price war among AI model providers. DeepSeek's V4-Pro model reportedly costs roughly one-ninth what GPT-5.5-class models cost to run, intensifying pressure on companies to adopt cheaper AI tooling aggressively, sometimes faster than their engineering practices can adapt. When the cost of generating code approaches zero, the incentive to generate more of it — carefully reviewed or not — goes up correspondingly.
+
+## What This Means for Engineers
+
+For individual developers, the takeaway isn't that AI tools should be avoided. It's that the skills separating valuable engineers from replaceable ones are shifting further toward architecture, systems thinking, debugging under pressure, and the judgment to know when AI-generated code should be rejected rather than merged. Code generation is increasingly commoditized; the ability to evaluate, constrain, and be accountable for that code is not.
+
+For engineering leaders, the lesson from the 24,506-line pull request is a process one: velocity metrics that only measure lines of code or PRs merged are dangerously incomplete in an AI-assisted world. Review discipline, architectural ownership, and a willingness to say "we don't understand this well enough to ship it" matter more, not less, as AI makes it easier to produce code that looks finished long before it actually is.
+
+The middle class of software engineering isn't disappearing because AI writes better code than mid-level engineers. It's under pressure because AI erases the volume advantage that used to be the main thing separating a mid-level engineer's output from a junior's — while doing very little to erase the judgment gap that separates both of them from a senior engineer. That gap is where the real value, and the real job security, now lives.

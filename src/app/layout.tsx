@@ -62,7 +62,10 @@ export const metadata: Metadata = {
     "Next.js",
     "portfolio",
   ],
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": "/intern/feed.xml" },
+  },
   openGraph: {
     type: "website",
     siteName: site.name,

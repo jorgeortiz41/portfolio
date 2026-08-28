@@ -25,6 +25,33 @@ bun run dev
 
 CI runs typecheck, lint, format:check and build on every PR.
 
+## Deployment
+
+Vercel builds this with Bun automatically — it detects `bun.lock` and runs
+`bun install` then `bun run build`. No configuration needed.
+
+**The lockfile is deliberately `lockfileVersion: 1`.** Vercel's build image
+currently ships Bun 1.3.14, which cannot parse the version 2 format that Bun
+1.4 writes:
+
+```
+error: Unknown lockfile version
+UnknownLockfileVersion: failed to parse lockfile: 'bun.lock'
+warn: Ignoring lockfile
+```
+
+The build still succeeds when that happens, which is what makes it easy to
+miss — but Vercel resolves every dependency fresh, so the lockfile stops
+pinning anything and production can drift from what was tested locally.
+
+Bun 1.4 reads and _preserves_ a v1 lockfile through both `bun install` and
+`bun add`, so this needs no ongoing maintenance. But do not regenerate the
+lockfile from scratch with Bun 1.4 (`rm bun.lock && bun install`) — that writes
+v2 and silently reintroduces the problem. If it needs regenerating, use Bun
+1.3.x, or check the deploy log for the warning above afterwards.
+
+Revisit once Vercel's build image ships Bun 1.4+.
+
 ## Adding a project
 
 Create `content/projects/<slug>.mdx`. The filename is the URL.
@@ -73,6 +100,53 @@ rather than rendering a half-blank card.
 
 Keep the six headings. Recruiters scan for the problem → approach → impact
 chain, and a consistent shape is what makes several case studies comparable.
+
+## The Intern (`/intern`)
+
+Posts written by a scheduled Claude agent — researched, drafted, committed and
+opened as a PR without a human in the loop. The section says so plainly: the
+point is not the writing, it is that the pipeline runs unattended. A human only
+merges.
+
+Posts live in `content/posts/<YYYY-MM-DD>-<slug>.mdx`. The date prefix is part
+of the filename because the generator used to emit `blog-post-1.md` every run
+and collide with itself.
+
+```yaml
+---
+title: "When the Robots Broke GitHub: Inside the August 17 Outage"
+date: "2026-08-21" # must match the filename's date prefix
+summary: "One or two sentences. Shown on the index and as the meta description."
+topic: software-engineering # | web | ai-ml | puerto-rico  (drives the accent hue)
+tags: [github, infrastructure]
+sources: # at least one — required
+  - title: "GitHub outage disrupts developers worldwide"
+    url: "https://www.geekwire.com/..."
+    publisher: "GeekWire"
+draft: false # true renders in `next dev`, never in production
+---
+```
+
+Validation is stricter here than for case studies, because nobody proofreads a
+file before it ships. Beyond the frontmatter schema, the loader rejects a body
+containing an `# H1` (the page renders the title), a trailing `**Source:**` line
+(citations belong in frontmatter), or an instruction-echo heading such as
+`## A Compelling Hook` — all three are mistakes real generated files made.
+
+Getting agent output in:
+
+```bash
+bun run ingest          # validate whatever is sitting in blogs/
+bun run ingest --write  # move the files that pass into content/posts/
+```
+
+`blogs/` is a gitignored drop-zone for the fallback path, when files arrive as
+chat attachments rather than as a pull request. `ingest` never invents
+frontmatter — a file without it is reported, not guessed at.
+
+The prompt the scheduled agent runs on is kept in
+[`docs/scheduled-task-prompt.md`](docs/scheduled-task-prompt.md) — the canonical
+copy, since the task itself lives on claude.ai and can drift.
 
 ## How the accent system works
 
@@ -137,10 +211,12 @@ Frame` is paused in background tabs and would otherwise leave the headline
 
 ```
 src/app/          routes — all server components
-src/components/   ui/ · motion/ · kinetic/ · hero/ · work/ · mdx/
+src/components/   ui/ · motion/ · kinetic/ · hero/ · work/ · intern/ · mdx/
 src/lib/          content, schema, accent, capabilities, site config
 src/data/         experience and skills (typed modules)
 content/projects/ case studies (.mdx)
+content/posts/    agent-written posts (.mdx)
+scripts/          ingest-posts.ts
 ```
 
 Client islands are limited to: theme toggle, index filter, and the motion

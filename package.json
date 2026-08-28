@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "bun@1.4.0",
   "engines": {
-    "node": ">=20.9.0"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "next dev",
@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
+    "ingest": "bun run scripts/ingest-posts.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

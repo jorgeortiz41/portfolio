@@ -80,3 +80,92 @@ export type Project = ProjectFrontmatter & {
 
 /** Listing shape — everything except the body. */
 export type ProjectSummary = Omit<Project, "body">;
+
+/* ------------------------------------------------------------------ Posts */
+
+/**
+ * Frontmatter contract for an /intern post.
+ *
+ * These are written unattended by a scheduled Claude agent, three at a time,
+ * three times a week — nobody proofreads the frontmatter before it lands. So
+ * this schema is doing more work than the case-study one: it is the only thing
+ * between a malformed generation and the live site. Every rule here exists
+ * because a real generated file got it wrong.
+ */
+
+/**
+ * YAML turns an unquoted `2026-08-28` into a Date, but a quoted "2026-08-28"
+ * into a string — and a model writes it both ways on different runs. Normalise
+ * to an ISO string first so the shape of the file cannot change the shape of
+ * the parsed value.
+ */
+function isoDatePart(value: unknown): unknown {
+  return value instanceof Date ? value.toISOString().slice(0, 10) : value;
+}
+
+function isoDateTime(value: unknown): unknown {
+  return value instanceof Date ? value.toISOString() : value;
+}
+
+/**
+ * Every post is a rewrite of reporting somebody else did. A post that cannot
+ * name its source is a defect rather than a stylistic choice, so the citation
+ * is required rather than merely encouraged.
+ */
+export const postSourceSchema = z.object({
+  title: z.string().min(1),
+  url: z.url(),
+  publisher: z.string().min(1).optional(),
+});
+
+/** The agent's beat. Drives the accent hue and the index filter. */
+export const POST_TOPICS = [
+  "software-engineering",
+  "web",
+  "ai-ml",
+  "puerto-rico",
+] as const;
+
+export type PostTopic = (typeof POST_TOPICS)[number];
+
+/** Topic -> accent hue, reusing the same one-hue engine as the case studies. */
+export const TOPIC_ACCENT: Record<PostTopic, number> = {
+  "software-engineering": 265,
+  web: 195,
+  "ai-ml": 25,
+  "puerto-rico": 150,
+};
+
+export const TOPIC_LABEL: Record<PostTopic, string> = {
+  "software-engineering": "Software Engineering",
+  web: "Web",
+  "ai-ml": "AI & ML",
+  "puerto-rico": "Puerto Rico",
+};
+
+export const postFrontmatterSchema = z.object({
+  title: z.string().min(1),
+  /** Publication date — also the filename prefix. */
+  date: z.preprocess(isoDatePart, z.iso.date()),
+  /** Shown on the index and used as the meta description. */
+  summary: z.string().min(1).max(300),
+  topic: z.enum(POST_TOPICS),
+  tags: z.array(z.string().min(1)).default([]),
+  sources: z.array(postSourceSchema).min(1),
+  /** When the agent run that produced this file happened. */
+  generatedAt: z.preprocess(isoDateTime, z.iso.datetime()).optional(),
+  /** Drafts render in `next dev` but are excluded from production builds. */
+  draft: z.boolean().default(false),
+});
+
+export type PostFrontmatter = z.infer<typeof postFrontmatterSchema>;
+export type PostSource = z.infer<typeof postSourceSchema>;
+
+export type Post = PostFrontmatter & {
+  slug: string;
+  /** Raw MDX body, compiled lazily by the post route. */
+  body: string;
+};
+
+/** Listing shape — everything except the body. */
+export type PostSummary = Omit<Post, "body">;

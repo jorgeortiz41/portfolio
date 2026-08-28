@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Match .nvmrc, package.json engines, and the Vercel build image.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.0
