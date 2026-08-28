@@ -1,0 +1,92 @@
+---
+title: NES Blackjack
+tagline: A playable Blackjack cartridge in 6502 assembly — no OS, no standard library, 256 bytes of state.
+role: Sole author
+period: "2024"
+accent: 345
+featured: false
+order: 6
+stack:
+  - 6502 Assembly
+  - cc65
+  - NES
+summary: >-
+  A Blackjack game for the Nintendo Entertainment System written in 6502
+  assembly, driving the PPU directly to render cards and polling the controller
+  by hand. Builds to a .nes ROM that runs on a real emulator.
+links:
+  repo: https://github.com/jorgeortiz41/Project_Blackjack
+---
+
+## Context
+
+Every other project on this site sits on top of something — a framework, a
+runtime, a package manager, an operating system. This one has none of that. It
+targets a 1983 console with a 1.79 MHz 6502, 2 KB of RAM, and no abstraction
+between your code and the hardware at all.
+
+Writing something playable under those constraints teaches a category of thing
+that is genuinely hard to pick up from web work: what all those layers are
+actually doing for you.
+
+## Problem
+
+Blackjack is trivial logic — draw cards, sum them, compare to 21. On the NES
+almost none of the difficulty is the game. It is that there is no `print`, no
+heap, no data structures, and no way to put a card on screen except by writing
+bytes to hardware registers in the right order at the right time.
+
+## Approach
+
+**Rendering goes straight through the PPU.** There is no graphics API. To place
+a card, you read `PPUSTATUS` to reset the address latch, write a nametable
+address one byte at a time into `PPUADDR`, then push tile indices into
+`PPUDATA`. Card positions are tracked as high/low address pairs in memory and
+advanced by hand — `+$01` to step one tile right, `+$1F` to wrap to the next
+row. Multi-tile cards are drawn by walking that address arithmetic per tile.
+
+**Input is the standard latch-and-shift protocol,** written out by hand: strobe
+`CONTROLLER1` with a 1 then a 0 to latch the button states, then read the port
+eight times, shifting each bit through the carry flag into a single byte with
+`LSR`/`ROL`. The loop terminates on a sentinel bit rather than a counter, which
+costs nothing and needs no extra register.
+
+The detail I am happiest with is **edge detection**. Buttons are compared
+against a `previous_pad1` byte from the last frame, and actions fire on
+_release_ rather than on press. Without that, holding a direction to raise a bet
+would run the increment every frame at 60 Hz and the bet would slam to its
+maximum instantly. It is a one-byte fix for a bug that would otherwise make the
+game unplayable.
+
+**All state lives in the zero page** — the first 256 bytes of RAM, which the
+6502 addresses with shorter, faster instructions. Bet amount, per-digit score
+tiles, player and dealer hand addresses, card counts and reset state are each a
+named byte there. Deciding what earns a zero-page slot is the closest thing this
+project has to a data model.
+
+## Architecture
+
+Assembled with the **cc65** toolchain — `ca65` per module, then `ld65` against a
+linker config that lays out the ROM to the iNES format the hardware expects.
+
+The build splits into four modules by concern: `reset` for power-on
+initialization, `backgrounds` for the static table and card graphics,
+`controllers` for input polling and dispatch, and `actions` for the game logic
+(hit, stand, bet, reset). Tile graphics live in a separate 8 KB `.chr` file
+mapped into the cartridge's pattern table.
+
+It was built in two stages: first a version that only renders the table, then a
+second that adds input and the actual game. Getting anything on screen at all is
+most of the work the first time.
+
+## What I'd do differently
+
+The card-drawing routines repeat the same PPU write sequence for each tile, with
+the address arithmetic inlined every time. That should be a subroutine taking a
+start address and a tile count — the current version is long, and adding a card
+layout means copying a block and adjusting offsets by hand, which is exactly
+where an off-by-one hides.
+
+I would also drive the writes from a vblank NMI handler rather than inline.
+Writing to the PPU outside vertical blank is unreliable on real hardware, and
+the current approach works in an emulator partly because emulators are forgiving.
