@@ -37,3 +37,6 @@ next-env.d.ts
 
 # Raw agent output, dropped here before `bun run ingest` normalises it.
 blogs/
+
+# Agent worktrees. Full checkouts, node_modules and all — never committed.
+.claude/worktrees/

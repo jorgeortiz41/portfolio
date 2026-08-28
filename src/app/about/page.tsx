@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { TagList } from "@/components/ui/Tag";
 import { ArrowUpRight } from "@/components/icons";
+import { bio } from "@/data/bio";
 import { currentExperience, archivedExperience } from "@/data/experience";
 import type { Experience } from "@/data/experience";
 import { skills } from "@/data/skills";
@@ -62,31 +63,11 @@ export default function AboutPage() {
         </h1>
 
         <div className="prose mt-10 max-w-2xl space-y-5 text-ink-muted">
-          <p className="leading-[1.75]">
-            I&apos;m a software engineer from {site.location}, in my final
-            semester. The domains have varied a lot — radio telescope
-            instrumentation, an SMS marketing platform, esports analytics,
-            threat intelligence — and what I specialize in now is the part that
-            carries across all of them: the architecture around a system&apos;s
-            clever bit, rather than the clever bit itself. Increasingly that
-            clever bit is a model.
-          </p>
-          <p className="leading-[1.75]">
-            Integrating AI well is mostly ordinary engineering done carefully.
-            On ARGUS the language model orchestrates and phrases, but never
-            sources a fact — every claim in a briefing traces back to a cited
-            API response, by construction. On the academic platform a
-            data-residency constraint pushed the design toward local inference
-            and a single database holding both the vectors and the relational
-            data. In both cases the model is one component with a failure mode,
-            designed for like any other dependency that can be wrong.
-          </p>
-          <p className="leading-[1.75]">
-            Before that: full-stack product work at LeadWire and Red Ventures,
-            and research engineering at the Arecibo Observatory, where I built
-            instrumentation software for radio science. Right now I&apos;m
-            finishing my degree and learning Rust by writing a shell.
-          </p>
+          {bio.map((paragraph) => (
+            <p key={paragraph.slice(0, 32)} className="leading-[1.75]">
+              {paragraph}
+            </p>
+          ))}
         </div>
 
         <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
