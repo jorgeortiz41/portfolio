@@ -5,13 +5,14 @@ import { site } from "@/lib/site";
 
 const nav = [
   { href: "/projects", label: "Work" },
+  { href: "/intern", label: "Intern" },
   { href: "/about", label: "About" },
 ];
 
 /**
- * Two links and a toggle. Small enough to stay inline at every width, which is
- * why there is no hamburger and no JS breakpoint — the old site simply hid its
- * entire nav below 1024px with no replacement.
+ * Three links and a toggle. Small enough to stay inline at every width, which
+ * is why there is no hamburger and no JS breakpoint — the old site simply hid
+ * its entire nav below 1024px with no replacement.
  */
 export function SiteHeader() {
   return (

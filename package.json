@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
+    "ingest": "bun run scripts/ingest-posts.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

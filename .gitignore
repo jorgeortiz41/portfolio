@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Raw agent output, dropped here before `bun run ingest` normalises it.
+blogs/
