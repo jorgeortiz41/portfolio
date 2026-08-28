@@ -7,8 +7,8 @@ import { Container } from "@/components/ui/Container";
 import { TagList } from "@/components/ui/Tag";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { ArrowLeftLink } from "@/components/work/ProjectMeta";
-import { PostByline } from "@/components/intern/PostByline";
-import { PostSources } from "@/components/intern/PostSources";
+import { PostByline } from "@/components/wire/PostByline";
+import { PostSources } from "@/components/wire/PostSources";
 import { getPost, getPostSlugs, getAllPosts } from "@/lib/posts";
 import { accentStyle } from "@/lib/accent";
 import { TOPIC_ACCENT } from "@/lib/schema";
@@ -30,12 +30,12 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.summary,
-    alternates: { canonical: `/intern/${slug}` },
+    alternates: { canonical: `/wire/${slug}` },
     openGraph: {
       type: "article",
       title: `${post.title} — ${site.shortTitle}`,
       description: post.summary,
-      url: `/intern/${slug}`,
+      url: `/wire/${slug}`,
       publishedTime: post.date,
     },
     twitter: {
@@ -70,7 +70,7 @@ export default async function PostPage({
     datePublished: post.date,
     author: {
       "@type": "Organization",
-      name: "The Intern — an automated writing agent",
+      name: "The Wire — an automated writing agent",
     },
     publisher: { "@type": "Person", name: site.name },
     keywords: post.tags.join(", "),
@@ -86,7 +86,7 @@ export default async function PostPage({
 
       {/* ------------------------------------------------------------- Header */}
       <Container className="pt-12 pb-10 sm:pt-16">
-        <ArrowLeftLink href="/intern">All posts</ArrowLeftLink>
+        <ArrowLeftLink href="/wire">All posts</ArrowLeftLink>
 
         <PostByline date={post.date} topic={post.topic} className="mt-12" />
 
@@ -120,7 +120,7 @@ export default async function PostPage({
         <Container className="pb-24">
           <div style={accentStyle(TOPIC_ACCENT[next.topic])} className="group">
             <Link
-              href={`/intern/${next.slug}`}
+              href={`/wire/${next.slug}`}
               className="block border-t border-rule pt-8 transition-colors group-hover:border-accent-hairline"
             >
               <p className="font-mono text-[0.6875rem] tracking-[0.2em] text-ink-faint uppercase">

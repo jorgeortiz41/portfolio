@@ -84,7 +84,7 @@ export type ProjectSummary = Omit<Project, "body">;
 /* ------------------------------------------------------------------ Posts */
 
 /**
- * Frontmatter contract for an /intern post.
+ * Frontmatter contract for an /wire post.
  *
  * These are written unattended by a scheduled Claude agent, three at a time,
  * three times a week — nobody proofreads the frontmatter before it lands. So
