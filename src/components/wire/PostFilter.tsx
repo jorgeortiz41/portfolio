@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PostRow } from "@/components/intern/PostRow";
+import { PostRow } from "@/components/wire/PostRow";
 import { groupPostsByMonth } from "@/lib/post-format";
 import { TOPIC_LABEL, type PostSummary, type PostTopic } from "@/lib/schema";
 import { cn } from "@/lib/cn";

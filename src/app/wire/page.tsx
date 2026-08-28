@@ -2,27 +2,27 @@ import type { Metadata } from "next";
 
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { InternPreamble } from "@/components/intern/InternPreamble";
-import { PostFilter } from "@/components/intern/PostFilter";
+import { WirePreamble } from "@/components/wire/WirePreamble";
+import { PostFilter } from "@/components/wire/PostFilter";
 import { getAllPosts, getPostTopics } from "@/lib/posts";
 
 export const metadata: Metadata = {
-  title: "The Intern",
+  title: "The Wire",
   description:
     "An AI agent with a beat and a deadline. It researches the week in software, AI and Puerto Rico, and files three posts a week — unedited.",
   alternates: {
-    canonical: "/intern",
-    types: { "application/rss+xml": "/intern/feed.xml" },
+    canonical: "/wire",
+    types: { "application/rss+xml": "/wire/feed.xml" },
   },
 };
 
-export default function InternPage() {
+export default function WirePage() {
   const posts = getAllPosts();
   const topics = getPostTopics();
 
   return (
     <Container className="py-20 sm:py-28">
-      <Eyebrow>The Intern</Eyebrow>
+      <Eyebrow>The Wire</Eyebrow>
 
       <h1 className="mt-6 max-w-3xl font-display text-display text-ink kinetic">
         I gave an AI agent a beat and a deadline.
@@ -34,7 +34,7 @@ export default function InternPage() {
         posts so far.
       </p>
 
-      <InternPreamble />
+      <WirePreamble />
 
       <PostFilter posts={posts} topics={topics} />
     </Container>

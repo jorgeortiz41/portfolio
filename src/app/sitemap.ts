@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     { path: "", priority: 1 },
     { path: "/projects", priority: 0.9 },
-    { path: "/intern", priority: 0.8 },
+    { path: "/wire", priority: 0.8 },
     { path: "/about", priority: 0.8 },
   ];
 
@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Every post the agent has filed. lastModified is the post's own date
     // rather than the build time — these never change after publication.
     ...getAllPosts().map((post) => ({
-      url: `${siteUrl}/intern/${post.slug}`,
+      url: `${siteUrl}/wire/${post.slug}`,
       lastModified: new Date(`${post.date}T00:00:00Z`),
       changeFrequency: "yearly" as const,
       priority: 0.6,

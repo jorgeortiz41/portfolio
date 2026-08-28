@@ -30,7 +30,7 @@ const facts = [
   { label: "Human input", value: "Merging the pull request" },
 ];
 
-export function InternPreamble() {
+export function WirePreamble() {
   return (
     <section
       aria-labelledby="how-this-works"

@@ -4,7 +4,7 @@ import { TOPIC_ACCENT, TOPIC_LABEL } from "@/lib/schema";
 import { site } from "@/lib/site";
 import { accentHex } from "@/lib/accent";
 
-export const alt = "Post from The Intern";
+export const alt = "Post from The Wire";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -60,7 +60,7 @@ export default async function PostOpengraphImage({
             letterSpacing: "-0.02em",
           }}
         >
-          {post?.title ?? "The Intern"}
+          {post?.title ?? "The Wire"}
         </div>
         <div
           style={{

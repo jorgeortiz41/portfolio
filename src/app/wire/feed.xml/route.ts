@@ -19,7 +19,7 @@ export function GET(): Response {
 
   const items = posts
     .map((post) => {
-      const url = `${siteUrl}/intern/${post.slug}`;
+      const url = `${siteUrl}/wire/${post.slug}`;
       return `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${url}</link>
@@ -34,9 +34,9 @@ export function GET(): Response {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${escapeXml(`The Intern — ${site.shortTitle}`)}</title>
-    <link>${siteUrl}/intern</link>
-    <atom:link href="${siteUrl}/intern/feed.xml" rel="self" type="application/rss+xml" />
+    <title>${escapeXml(`The Wire — ${site.shortTitle}`)}</title>
+    <link>${siteUrl}/wire</link>
+    <atom:link href="${siteUrl}/wire/feed.xml" rel="self" type="application/rss+xml" />
     <description>Posts researched and written by a scheduled AI agent, unedited.</description>
     <language>en</language>${
       updated

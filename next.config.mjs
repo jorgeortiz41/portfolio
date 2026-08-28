@@ -9,6 +9,19 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     formats: ["image/avif", "image/webp"],
   },
+  // The section shipped as /intern before it was renamed to /wire. Those URLs
+  // are already in a published sitemap and RSS feed, so they redirect rather
+  // than 404. 308 so the move is cached and search engines transfer the URLs.
+  redirects() {
+    return [
+      { source: "/intern", destination: "/wire", permanent: true },
+      {
+        source: "/intern/:path*",
+        destination: "/wire/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

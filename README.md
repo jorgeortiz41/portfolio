@@ -101,7 +101,7 @@ rather than rendering a half-blank card.
 Keep the six headings. Recruiters scan for the problem → approach → impact
 chain, and a consistent shape is what makes several case studies comparable.
 
-## The Intern (`/intern`)
+## The Wire (`/wire`)
 
 Posts written by a scheduled Claude agent — researched, drafted, committed and
 opened as a PR without a human in the loop. The section says so plainly: the
@@ -211,7 +211,7 @@ Frame` is paused in background tabs and would otherwise leave the headline
 
 ```
 src/app/          routes — all server components
-src/components/   ui/ · motion/ · kinetic/ · hero/ · work/ · intern/ · mdx/
+src/components/   ui/ · motion/ · kinetic/ · hero/ · work/ · wire/ · mdx/
 src/lib/          content, schema, accent, capabilities, site config
 src/data/         experience and skills (typed modules)
 content/projects/ case studies (.mdx)
