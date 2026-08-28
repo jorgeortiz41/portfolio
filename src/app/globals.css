@@ -1,31 +1,401 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* ==========================================================================
+   0. dark: variant
+   Dark is the default here, not a system-preference branch — this design was
+   built dark-first and light is the deliberate opt-out. So `dark:` applies
+   unless the viewer has explicitly chosen light.
+   ========================================================================== */
+
+@custom-variant dark (&:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *));
+
+/* ==========================================================================
+   1. Animatable custom properties
+   Registering these lets the browser interpolate them natively. Without
+   @property, `--kin-wght` is just a string and transitions snap instead of
+   tween. This is what makes the kinetic type smooth without a JS tween loop.
+   ========================================================================== */
+
+@property --kin-wght {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 400;
+}
+
+@property --kin-wdth {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 100;
+}
+
+@property --kin-opsz {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 14;
+}
+
+/* Normalised scroll velocity, 0-1, written once per frame by ScrollDriver.
+   Registered so CSS can do arithmetic on it — the kinetic hero derives its
+   font axes from this in pure CSS rather than JS touching each element. */
+@property --scroll-v {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* Per-project accent hue, 0-360. Inherits so a single inline style on a page
+   wrapper re-colors everything beneath it, with no client JS. */
+@property --accent-h {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 38;
+}
+
+/* ==========================================================================
+   2. Theme tokens
+   Dark is the default, applied on bare :root. Light is opt-in via an explicit
+   [data-theme="light"] stamped by the toggle and by the pre-paint script in
+   the layout, so it never flashes.
+   ========================================================================== */
 
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+  color-scheme: dark;
+
+  --bg: oklch(0.125 0.005 280);
+  --bg-elevated: oklch(0.175 0.006 280);
+  --ink: oklch(0.97 0.003 85);
+  --ink-muted: oklch(0.73 0.005 85);
+  --ink-faint: oklch(0.55 0.006 85);
+  --rule: oklch(0.97 0.003 85 / 0.12);
+  --rule-strong: oklch(0.97 0.003 85 / 0.26);
+
+  /* Worst case across all 36 hues: 9.64:1 (hue 20). Wide margin. */
+  --accent-l: 0.8;
+  --accent-c: 0.145;
+
+  --grain-opacity: 0.05;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: oklch(0.985 0.003 85);
+  --bg-elevated: oklch(0.962 0.004 85);
+  --ink: oklch(0.16 0.006 60);
+  --ink-muted: oklch(0.44 0.006 60);
+  --ink-faint: oklch(0.62 0.005 60);
+  --rule: oklch(0.16 0.006 60 / 0.14);
+  --rule-strong: oklch(0.16 0.006 60 / 0.28);
+
+  /* Measured, not guessed. Swept across all 36 hue steps against this theme's
+     background, L=0.48/C=0.15 yields a worst-case WCAG contrast of 5.26:1 (at
+     hue 190, cyan — the weakest hue in light mode). Raising L to 0.52 drops
+     that to 4.49 and fails AA. Do not raise it without re-running the sweep. */
+  --accent-l: 0.48;
+  --accent-c: 0.15;
+
+  --grain-opacity: 0.035;
 }
 
-body {
-    background-image: linear-gradient(
-        111.4deg,
-        rgba(7, 7, 9, 1) 6.5%,
-        rgba(27, 24, 113, 1) 93.2%
+/* NOTE: the accent is deliberately NOT pre-composed into a `--accent` variable
+   on :root.
+   
+   Custom properties resolve where they are DECLARED, not where they are used.
+   A `--accent: oklch(... var(--accent-h))` on :root resolves against :root's
+   hue once, and descendants inherit that already-resolved colour — so setting
+   --accent-h on a project wrapper had no effect and every project silently
+   rendered the default hue.
+   
+   Instead the oklch() expression is written directly into each consumer below,
+   where var(--accent-h) resolves against the element's own inherited value. */
+
+/* ==========================================================================
+   3. Tailwind theme
+   `@theme inline` emits utilities that reference the vars above rather than
+   inlining their values, which is what keeps them live across theme changes.
+   ========================================================================== */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --color-accent-soft: oklch(
+    var(--accent-l) var(--accent-c) var(--accent-h) / 0.14
+  );
+  --color-accent-hairline: oklch(
+    var(--accent-l) var(--accent-c) var(--accent-h) / 0.4
+  );
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Fluid display sizes. The hero is the only true "display" size. */
+  /* Sized to the actual headline rather than to the largest number that fits.
+     A previous, much longer line ran to 5 lines and 515px at 7rem — over half
+     a 900px viewport. Re-check this if the hero copy changes length again. */
+  --text-hero: clamp(2.75rem, 7.5vw, 6rem);
+  --text-hero--line-height: 0.92;
+  --text-display: clamp(2rem, 5.5vw, 4rem);
+  --text-display--line-height: 0.98;
+  --text-title: clamp(1.5rem, 3vw, 2.25rem);
+  --text-title--line-height: 1.1;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   4. Base
+   ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* The old site had no focus indicator at all — Preflight strips the UA
+     outline and nothing replaced it. This is the single most important
+     accessibility fix in V2, so it lives on the universal selector. */
+  :focus-visible {
+    outline: 2px solid oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: oklch(
+      var(--accent-l) var(--accent-c) var(--accent-h) / 0.14
     );
+    color: var(--ink);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Long-form case-study prose caps here; display text is exempt. */
+  :where(.prose) p,
+  :where(.prose) li {
+    max-width: 68ch;
+  }
 }
 
-@layer utilities {
-    .text-balance {
-        text-wrap: balance;
+/* ==========================================================================
+   5. Kinetic type
+   font-variation-settings is NOT GPU-composited, so it is confined to
+   display-size elements only — never body copy, never list items.
+   ========================================================================== */
+
+@utility kinetic {
+  font-variation-settings:
+    "wght" var(--kin-wght),
+    "wdth" var(--kin-wdth),
+    "opsz" var(--kin-opsz);
+  transition:
+    --kin-wght 420ms var(--ease-out-expo),
+    --kin-wdth 420ms var(--ease-out-expo);
+}
+
+/* Section headings widen as they enter the viewport. Pure CSS: this runs off
+   the main thread where animation-timeline is supported, and simply does
+   nothing where it isn't. */
+/* The hero derives its axes from scroll velocity entirely in CSS. JS writes one
+   number to the document; no per-element style writes, no tween loop.
+
+   WEIGHT ONLY, deliberately. Measured on this headline: animating `wght`
+   400->740 never changes the line count, while animating `wdth` reflows 4 lines
+   to 3 — even at a 6% delta, because narrower glyphs genuinely fit more words
+   per line. On the hero a reflow relayouts the entire page below it on every
+   frame of a fast scroll, which is exactly the cost this design set out to
+   avoid. The width axis is therefore reserved for single-line display text
+   (.kinetic-enter headings, project row titles) where reflow cannot cascade.
+
+   Range stays inside Bricolage Grotesque's real axis: wght 200-800. */
+.kinetic-hero {
+  --kin-wght: calc(400 + var(--scroll-v) * 340);
+  /* Velocity is already smoothed in JS; a transition on top would fight it. */
+  transition: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .kinetic-enter {
+      animation: kinetic-widen linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
     }
+  }
+}
+
+@keyframes kinetic-widen {
+  from {
+    --kin-wdth: 82;
+    --kin-wght: 380;
+    opacity: 0.55;
+  }
+  to {
+    --kin-wdth: 100;
+    --kin-wght: 620;
+    opacity: 1;
+  }
+}
+
+/* Scroll reveal with no JS and no observer. Where animation-timeline is
+   unsupported the content simply renders — it never depends on the animation
+   to become visible. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Touch targets
+   Several controls are visually small by design (icon links, mono nav labels,
+   filter chips). Rather than inflate them and change the look, this expands the
+   *hit* area to the 44x44 Apple/WCAG-2.5.5 minimum with a centred pseudo
+   element. Measured before this: footer icons were 20x20 and nav links 16px
+   tall — small enough on a phone that taps land in the gaps, which reads as
+   "the button doesn't work".
+   ========================================================================== */
+
+@utility tap-target {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 100%;
+    height: 100%;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Fine pointers do not need the expansion, and overlapping pseudo elements
+   would interfere with the hover states on tightly-packed rows. */
+@media (pointer: fine) {
+  .tap-target::after {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   6. Film grain
+   One fixed overlay. Cheap, and it does more for texture than any animation.
+   ========================================================================== */
+
+@utility grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+}
+
+/* Set by MagneticCursor while the custom dot is active. `!important` covers
+   elements that set their own cursor (buttons, links, summary). */
+.cursor-hidden,
+.cursor-hidden * {
+  cursor: none !important;
+}
+
+/* ==========================================================================
+   7. Reduced motion — the top rung of the degradation ladder
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .kinetic,
+  .kinetic-hero {
+    font-variation-settings:
+      "wght" 500,
+      "wdth" 100;
+    transition: none;
+  }
+
+  .grain-overlay {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   8. View transitions
+   ========================================================================== */
+
+/* The sticky header is present on both sides of every navigation, so give it a
+   stable name and let it hold still while the page beneath it morphs. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(site-header) {
+    animation-duration: 0s;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--ease-out-expo);
+  }
+}
+
+/* A view transition should never override an explicit motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

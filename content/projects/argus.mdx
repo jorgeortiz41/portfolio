@@ -1,0 +1,139 @@
+---
+title: ARGUS
+tagline: An AI analyst for threat intelligence whose every claim can be traced back to a source.
+role: Sole engineer — Cyber Threat Intelligence & AI Engineering intern
+period: Jun — Aug 2026
+accent: 38
+featured: true
+order: 1
+summary: >-
+  An AI-assisted OSINT platform built at Evertec that enriches indicators across
+  14 intelligence sources and generates auditable threat briefings — with a
+  verification layer that cites facts independently of the language model.
+cover:
+  src: /argus-placeholder.svg
+  alt: ARGUS threat intelligence platform
+  width: 600
+  height: 340
+stack:
+  - Python
+  - Pydantic AI
+  - FastAPI
+  - MCP
+  - PostgreSQL
+  - Logfire
+  - Docker
+metrics:
+  - label: OSINT sources
+    value: "14"
+  - label: Indicator types
+    value: "7"
+  - label: LLM-sourced claims
+    value: "0"
+links:
+  repo: https://github.com/jorgeortiz41/Argus
+---
+
+## Context
+
+A threat intelligence analyst investigating a single suspicious IP address does
+the same thing every time: paste the indicator into eight or ten different
+tools, read each result, and assemble the picture by hand. The work is
+mechanical, it is slow, and the analyst's real skill — judgement about what the
+evidence _means_ — gets spent on tab-switching instead.
+
+The obvious move is to put a language model in the middle. That is also where
+most attempts fall apart.
+
+## Problem
+
+Threat intelligence is a domain where a confident wrong answer is worse than no
+answer. A briefing that says an IP is associated with a particular malware
+family, when it isn't, can send an incident response team down a costly dead
+end. And a language model asked to summarize enrichment data will, occasionally
+and fluently, produce exactly that.
+
+So the problem was not "can an LLM summarize OSINT data" — it obviously can. It
+was: **can a generated briefing be trusted enough to act on?**
+
+That reframing drove every subsequent decision.
+
+## Approach
+
+The core design constraint I set was that **the language model is never the
+source of a fact.** It orchestrates, it phrases, and it decides what to look up
+next — but every factual claim that lands in a briefing is extracted
+deterministically from an API response, and carries a citation back to it.
+
+Concretely, that split the system into two paths:
+
+- **A reasoning path**, a Pydantic AI agent that handles entity resolution
+  ("is this string an IP, a hash, or a username?"), decides which of the
+  integrations are worth querying for that entity type, and writes the prose.
+- **A verification path**, ordinary deterministic code that pulls the specific
+  fields it cares about out of each API response, records which source and which
+  field each one came from, and assembles the claim set.
+
+The briefing is then rendered from the verified claim set. If a statement has no
+backing claim, it does not appear. The LLM cannot smuggle a fact in, because the
+LLM's output is not what gets published — the claim set is.
+
+The alternative I rejected was the more common one: let the model summarize
+freely, then run a second model pass to fact-check it. That is cheaper to build
+and it fails in a way I did not want to own — the checker has the same failure
+mode as the writer, so errors correlate rather than cancel.
+
+## Architecture
+
+Enrichment fans out across 14 OSINT integrations — Recorded Future for risk
+scoring and ATT&CK mapping, plus Shodan, VirusTotal, AbuseIPDB, WHOIS, DNS,
+GitHub and others — normalized into a single internal indicator model covering
+seven entity types: IPs, domains, hashes, URLs, malware, emails and usernames.
+
+On top of that sits a **policy-driven corroboration layer**. Sources disagree,
+and they don't disagree randomly: a passive DNS record and a reputation score
+are different kinds of evidence with different weight. The policy layer encodes
+how many independent sources a claim needs, and of what kind, before it is
+promoted from "reported" to "corroborated." Analysts see which tier each claim
+sits in rather than a single blended confidence number that hides the
+disagreement.
+
+Output goes two ways. **STIX 2.1** bundles for machine-to-machine sharing, so
+findings flow into tooling that already speaks that format. And **Word exports**
+aligned to Traffic Light Protocol, because the humans who need to read a
+briefing are frequently not the humans who run the platform.
+
+The whole thing is reachable as both a CLI and a web GUI over FastAPI — the CLI
+because analysts live in terminals and it scripts cleanly, the GUI because the
+relationship graph is genuinely easier to read than to describe. Enrichment
+sources are exposed to the agent over **MCP**, so adding an integration is a
+server registration rather than a change to the agent's own code.
+
+Every agent run is traced with **Logfire**. That matters more here than in a
+typical service: when an analyst questions a claim, the useful answer is not
+"the model said so" but the actual sequence of tool calls, arguments and
+responses that produced it. Observability is part of the auditability argument,
+not an operational afterthought.
+
+## Impact
+
+The system turns an investigation that spanned many manual lookups into a single
+query, and produces a briefing that a reader can audit line by line — each claim
+traceable to the source and field it came from.
+
+The property I care most about is the one that is invisible when it works: in
+generated briefings, **the number of claims originating from the language model
+rather than from a cited API response is zero, by construction.** Not "low."
+Not "monitored." Structurally impossible, because that path does not exist.
+
+## What I'd do differently
+
+The corroboration policy lives in code. It should be configuration — different
+teams have genuinely different standards for what counts as corroborated, and
+right now changing that standard means changing Python and redeploying rather
+than editing a policy file.
+
+I would also invest earlier in recording _why_ a source was skipped. The agent
+makes sensible decisions about which integrations to query for a given entity
+type, but when an analyst wonders why a particular source is missing from a
+report, the answer is currently in the logs rather than in the report.

@@ -1,0 +1,63 @@
+---
+title: Synthetic RFI Generator
+tagline: Generating the interference radio astronomers need to train against, because the real thing is unlabelled.
+role: Sole engineer — Arecibo Industrial Affiliates Program
+period: "2024"
+accent: 150
+featured: false
+order: 4
+summary: >-
+  A synthetic radio frequency interference generator for K-band radio science,
+  modelling modern RFI sources to produce labelled datasets for radio astronomy
+  research at the Arecibo Observatory.
+cover:
+  src: /rfi-placeholder.svg
+  alt: Synthetic RFI generator
+  width: 600
+  height: 340
+stack:
+  - Python
+  - NumPy
+  - SciPy
+  - pandas
+  - Matplotlib
+links:
+  repo: https://github.com/jorgeortiz41/RFIGenerator
+---
+
+## Context
+
+Radio telescopes observing in the K-band contend with a steadily worsening
+interference environment — satellite downlinks, terrestrial transmitters, and
+consumer hardware that did not exist when much of the observing methodology was
+established.
+
+## Problem
+
+Mitigation techniques need to be evaluated against interference, and evaluating
+them requires knowing the ground truth. Real observational data contains real
+RFI, but it is unlabelled: you cannot measure how well a mitigation technique
+removed interference when you don't know exactly what was there to begin with.
+
+## Approach
+
+Generate the interference synthetically, so the ground truth is known by
+construction. The generator models the characteristics of modern RFI sources
+relevant to the K-band and injects them into datasets with full knowledge of
+what was added, where, and at what power.
+
+I built both a GUI and a CLI deliberately. Researchers exploring parameter space
+want to see the effect of a change immediately, which is a GUI task; generating
+a large labelled dataset is a scripting task. Serving only one of those would
+have meant the tool got used for only half of what it is good for.
+
+## Impact
+
+Produces labelled K-band datasets for radio astronomy research, giving
+mitigation work a ground truth to measure against.
+
+## What I'd do differently
+
+The RFI source models are hardcoded. Given how quickly the real interference
+environment changes, they should be data-driven — a researcher should be able to
+add a new source profile without editing the generator.

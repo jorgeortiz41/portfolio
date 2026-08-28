@@ -1,0 +1,43 @@
+---
+title: GPT Discord Bot
+tagline: A conversational bot that also emits structured CSV, published to a public bot directory.
+role: Sole engineer
+period: "2023"
+accent: 190
+featured: false
+order: 7
+summary: >-
+  A Discord bot built on GPT-3.5-Turbo that generates text from user prompts and
+  can return spreadsheet-ready CSV data, published and installable from top.gg.
+cover:
+  src: /brobot.webp
+  alt: GPT Discord bot in a server
+  width: 1200
+  height: 1088
+stack:
+  - Python
+  - discord.py
+  - OpenAI
+links:
+  live: https://top.gg/bot/1164764096269402134
+---
+
+## Context
+
+Chat assistants inside Discord were novel at the time, and most of them did one
+thing: answer in prose. Useful, but it stops exactly where the work starts —
+someone still has to turn the answer into something structured.
+
+## Approach
+
+Alongside conversational responses, the bot can return generated data as CSV, so
+output lands somewhere a spreadsheet can open rather than in a chat scrollback
+that has to be copied by hand.
+
+Publishing to top.gg meant treating it as a product rather than a script:
+install flow, permissions scoped to what it actually needs, and behaviour that
+survives contact with a server full of people who did not read any instructions.
+
+## Impact
+
+Publicly listed and installable to any Discord server.

@@ -1,0 +1,48 @@
+---
+title: Hermit
+tagline: A POSIX shell written in Rust, built to learn the language from the systems level up.
+role: Sole engineer
+period: "2026 — in progress"
+accent: 95
+featured: false
+order: 5
+stack:
+  - Rust
+  - anyhow
+  - thiserror
+summary: >-
+  An in-progress POSIX-compliant shell in Rust — command parsing, a REPL loop
+  and builtins — written as a way into systems programming and Rust's ownership
+  model.
+links:
+  repo: https://github.com/jorgeortiz41/hermit
+---
+
+## Context
+
+I wanted to learn Rust properly, which for me means writing something with real
+constraints rather than working through exercises. A shell is a good target: it
+is small enough to finish, but it forces you into process management, file
+descriptors, string parsing and error handling — the parts of systems
+programming that Rust's ownership model actually has opinions about.
+
+## Approach
+
+Building it against the CodeCrafters shell challenge, which supplies a test
+suite and a staged specification. That removes the two things that usually kill
+a learning project: deciding what "done" means, and not knowing whether the
+thing is correct.
+
+So far: the REPL loop, command parsing, and the `echo`, `exit` and `type`
+builtins, with `anyhow` and `thiserror` for error handling — the idiomatic split
+between application-level context and typed library errors.
+
+## Status
+
+**In progress.** Currently around 150 lines across the REPL and builtins. Next
+is quoting and escape handling, then redirection, then pipelines — which is
+where the process-management and file-descriptor work starts in earnest.
+
+I am including it here mid-build deliberately. Most of what a portfolio shows is
+finished and polished, which says nothing about how someone works when the
+problem is still open.
