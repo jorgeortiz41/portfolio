@@ -31,11 +31,27 @@ function readProjectFile(filename: string): Project {
 
 function readAll(): Project[] {
   if (!fs.existsSync(CONTENT_DIR)) return [];
-  return fs
+
+  const projects = fs
     .readdirSync(CONTENT_DIR)
     .filter((f) => f.endsWith(".mdx"))
     .map(readProjectFile)
     .sort((a, b) => a.order - b.order);
+
+  // Duplicate `order` values sort nondeterministically, so the index silently
+  // reshuffles between builds. Cheap to check, annoying to debug.
+  const seen = new Map<number, string>();
+  for (const project of projects) {
+    const clash = seen.get(project.order);
+    if (clash) {
+      throw new Error(
+        `Duplicate order ${project.order} in content/projects: "${clash}" and "${project.slug}". Orders must be unique.`,
+      );
+    }
+    seen.set(project.order, project.slug);
+  }
+
+  return projects;
 }
 
 /** Listings: everything but the MDX body. */

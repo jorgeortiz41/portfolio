@@ -58,33 +58,34 @@ export default function AboutPage() {
         <Eyebrow>About</Eyebrow>
 
         <h1 className="mt-6 max-w-4xl font-display text-display text-ink kinetic">
-          Software for problems where being plausibly wrong is the expensive
-          failure.
+          The engineering around the model is the actual work.
         </h1>
 
         <div className="prose mt-10 max-w-2xl space-y-5 text-ink-muted">
           <p className="leading-[1.75]">
-            I&apos;m a software engineer from {site.location}. The domains have
-            varied a lot — radio telescope instrumentation, an SMS marketing
-            platform, esports analytics, threat intelligence — but the problems
-            rhyme: systems where being plausibly wrong is worse than being slow,
-            and where the hard part is the architecture around the clever bit,
-            not the clever bit.
+            I&apos;m a software engineer from {site.location}, in my final
+            semester. The domains have varied a lot — radio telescope
+            instrumentation, an SMS marketing platform, esports analytics,
+            threat intelligence — and what I specialize in now is the part that
+            carries across all of them: the architecture around a system&apos;s
+            clever bit, rather than the clever bit itself. Increasingly that
+            clever bit is a model.
           </p>
           <p className="leading-[1.75]">
-            That shapes how I design with AI. On ARGUS the language model
-            orchestrates and phrases, but never sources a fact — every claim in
-            a generated briefing traces back to a cited API response, by
-            construction. On the academic platform a data-residency constraint
-            pushed the design toward local inference and a single database
-            holding both the vectors and the relational data. In both cases the
-            model is a component with a failure mode, designed for like any
-            other dependency that can be wrong.
+            Integrating AI well is mostly ordinary engineering done carefully.
+            On ARGUS the language model orchestrates and phrases, but never
+            sources a fact — every claim in a briefing traces back to a cited
+            API response, by construction. On the academic platform a
+            data-residency constraint pushed the design toward local inference
+            and a single database holding both the vectors and the relational
+            data. In both cases the model is one component with a failure mode,
+            designed for like any other dependency that can be wrong.
           </p>
           <p className="leading-[1.75]">
             Before that: full-stack product work at LeadWire and Red Ventures,
             and research engineering at the Arecibo Observatory, where I built
-            instrumentation software for radio science.
+            instrumentation software for radio science. Right now I&apos;m
+            finishing my degree and learning Rust by writing a shell.
           </p>
         </div>
 

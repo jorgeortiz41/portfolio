@@ -3,10 +3,10 @@ export const site = {
   title: "Jorge Ortiz — Software Engineer",
   shortTitle: "Jorge Ortiz",
   role: "Software Engineer",
-  focus: "Software Architecture · AI Systems",
+  focus: "AI Systems & Integration",
   location: "Puerto Rico",
   description:
-    "Software engineer working on systems where correctness matters — threat intelligence, radio science instrumentation, analytics platforms, and the AI components inside them.",
+    "Software engineer specializing in AI integration and systems — the architecture that turns models into products people can actually use.",
   email: "jortizsoftware@gmail.com",
   resume: "/resume.pdf",
   socials: {

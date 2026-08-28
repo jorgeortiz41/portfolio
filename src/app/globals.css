@@ -97,14 +97,17 @@
   --grain-opacity: 0.035;
 }
 
-/* Composed accent. Every accent in the site derives from these three numbers. */
-:root {
-  --accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
-  --accent-soft: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 0.14);
-  --accent-hairline: oklch(
-    var(--accent-l) var(--accent-c) var(--accent-h) / 0.4
-  );
-}
+/* NOTE: the accent is deliberately NOT pre-composed into a `--accent` variable
+   on :root.
+   
+   Custom properties resolve where they are DECLARED, not where they are used.
+   A `--accent: oklch(... var(--accent-h))` on :root resolves against :root's
+   hue once, and descendants inherit that already-resolved colour — so setting
+   --accent-h on a project wrapper had no effect and every project silently
+   rendered the default hue.
+   
+   Instead the oklch() expression is written directly into each consumer below,
+   where var(--accent-h) resolves against the element's own inherited value. */
 
 /* ==========================================================================
    3. Tailwind theme
@@ -120,18 +123,23 @@
   --color-ink-faint: var(--ink-faint);
   --color-rule: var(--rule);
   --color-rule-strong: var(--rule-strong);
-  --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
-  --color-accent-hairline: var(--accent-hairline);
+  --color-accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --color-accent-soft: oklch(
+    var(--accent-l) var(--accent-c) var(--accent-h) / 0.14
+  );
+  --color-accent-hairline: oklch(
+    var(--accent-l) var(--accent-c) var(--accent-h) / 0.4
+  );
 
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   /* Fluid display sizes. The hero is the only true "display" size. */
-  /* Sized for the actual headline, not for the largest number that fits: at
-     7rem this copy ran to 5 lines and 515px, over half a 900px viewport. */
-  --text-hero: clamp(2.25rem, 5.6vw, 4.5rem);
+  /* Sized to the actual headline rather than to the largest number that fits.
+     A previous, much longer line ran to 5 lines and 515px at 7rem — over half
+     a 900px viewport. Re-check this if the hero copy changes length again. */
+  --text-hero: clamp(2.75rem, 7.5vw, 6rem);
   --text-hero--line-height: 0.92;
   --text-display: clamp(2rem, 5.5vw, 4rem);
   --text-display--line-height: 0.98;
@@ -164,13 +172,15 @@
      outline and nothing replaced it. This is the single most important
      accessibility fix in V2, so it lives on the universal selector. */
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid oklch(var(--accent-l) var(--accent-c) var(--accent-h));
     outline-offset: 3px;
     border-radius: 2px;
   }
 
   ::selection {
-    background-color: var(--accent-soft);
+    background-color: oklch(
+      var(--accent-l) var(--accent-c) var(--accent-h) / 0.14
+    );
     color: var(--ink);
   }
 

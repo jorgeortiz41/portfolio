@@ -6,7 +6,16 @@ export type SkillGroup = {
 export const skills: readonly SkillGroup[] = [
   {
     category: "Languages",
-    items: ["Python", "TypeScript", "JavaScript", "Java", "Go", "PHP", "SQL"],
+    items: [
+      "Python",
+      "TypeScript",
+      "JavaScript",
+      "Java",
+      "Go",
+      "Rust",
+      "PHP",
+      "SQL",
+    ],
   },
   {
     category: "AI / ML",
@@ -40,6 +49,6 @@ export const skills: readonly SkillGroup[] = [
   },
   {
     category: "Platform",
-    items: ["AWS", "Vercel", "Docker", "Git", "CI/CD"],
+    items: ["AWS", "Vercel", "Docker", "Git", "CI/CD", "Jira", "Bitbucket"],
   },
 ];

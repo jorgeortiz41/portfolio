@@ -35,15 +35,14 @@ export default function OpengraphImage() {
       <div
         style={{
           display: "flex",
-          fontSize: 66,
+          fontSize: 92,
           lineHeight: 1.05,
           color: "#fafafa",
           letterSpacing: "-0.02em",
           maxWidth: "90%",
         }}
       >
-        I build software for problems where a confidently wrong answer is the
-        expensive one.
+        I build the systems that AI runs inside.
       </div>
 
       <div

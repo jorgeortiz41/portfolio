@@ -54,7 +54,7 @@ export default function Home() {
 
           <h1 className="kinetic-hero mt-8 max-w-5xl font-display text-hero text-ink kinetic">
             <ScrambleText
-              text="I build software for problems where a confidently wrong answer is the expensive one."
+              text="I build the systems that AI runs inside."
               delay={120}
               duration={850}
             />
@@ -62,8 +62,9 @@ export default function Home() {
 
           <p className="mt-8 max-w-xl text-lg text-ink-muted">
             Six years across radio astronomy instrumentation, SMS marketing
-            platforms, esports analytics and threat intelligence. Currently at
-            Evertec, designing AI systems that have to be auditable.
+            platforms, esports analytics and threat intelligence — most recently
+            building AI threat-intelligence tooling at Evertec. Now in my final
+            semester.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -192,8 +193,8 @@ export default function Home() {
             <span id="contact-heading">Contact</span>
           </Eyebrow>
           <p className="kinetic-enter mt-8 max-w-3xl font-display text-display text-ink kinetic">
-            Looking for software engineering work on systems that have to be
-            right.
+            Finishing my degree and looking for full-time software engineering
+            work.
           </p>
           <a
             href={`mailto:${site.email}`}
