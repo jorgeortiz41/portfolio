@@ -65,7 +65,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "/",
-    types: { "application/rss+xml": "/intern/feed.xml" },
+    types: { "application/rss+xml": "/wire/feed.xml" },
   },
   openGraph: {
     type: "website",

@@ -23,7 +23,7 @@ export function PostRow({
       className={cn("group", className)}
     >
       <Link
-        href={`/intern/${post.slug}`}
+        href={`/wire/${post.slug}`}
         className="relative block border-t border-rule py-8 transition-colors duration-500 outline-none group-focus-within:border-accent-hairline group-hover:border-accent-hairline"
       >
         <span

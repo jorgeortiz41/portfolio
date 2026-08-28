@@ -101,7 +101,7 @@ rather than rendering a half-blank card.
 Keep the six headings. Recruiters scan for the problem → approach → impact
 chain, and a consistent shape is what makes several case studies comparable.
 
-## The Intern (`/intern`)
+## The Wire (`/wire`)
 
 Posts written by a scheduled Claude agent — researched, drafted, committed and
 opened as a PR without a human in the loop. The section says so plainly: the
