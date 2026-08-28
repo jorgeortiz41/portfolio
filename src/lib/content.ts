@@ -59,6 +59,16 @@ export function getAllProjects(): ProjectSummary[] {
   return readAll().map(({ body: _body, ...rest }) => rest);
 }
 
+/**
+ * Everything, bodies included. Only the companion's knowledge dossier wants
+ * this — the routes all read one project at a time. Exists so the dossier does
+ * not have to map `getProject()` over every slug, which would re-read and
+ * re-parse the whole directory once per project.
+ */
+export function getAllProjectsWithBody(): Project[] {
+  return readAll();
+}
+
 export function getFeaturedProjects(): ProjectSummary[] {
   return getAllProjects().filter((p) => p.featured);
 }

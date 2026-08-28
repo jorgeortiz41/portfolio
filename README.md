@@ -148,6 +148,48 @@ The prompt the scheduled agent runs on is kept in
 [`docs/scheduled-task-prompt.md`](docs/scheduled-task-prompt.md) — the canonical
 copy, since the task itself lives on claude.ai and can drift.
 
+## The companion (`/api/chat` + `src/components/companion/`)
+
+A 16x16 pixel sprite paces the bottom of every page, drops route-aware quips,
+and opens into a chat that answers as Jorge.
+
+**The split that makes it safe to put in front of a recruiter.** Facts and
+personality come from different places, and the model is not allowed to mix
+them:
+
+|          | Source                      | Rule                                                                                |
+| -------- | --------------------------- | ----------------------------------------------------------------------------------- |
+| Facts    | `src/lib/chat/knowledge.ts` | Assembled from the site's own content. The model may phrase and connect, never add. |
+| Opinions | `src/data/persona.ts`       | Hand-written, flagged in the prompt as flavour. Edit freely — it is the character.  |
+
+The dossier ends by declaring itself closed: anything not in it is unknown, and
+the correct answer is to say so. That is the same rule ARGUS runs on, which
+feels appropriate.
+
+**No retrieval, deliberately.** The whole corpus — bio, six roles, seven case
+studies with full bodies, the post index — is ~4,600 words / ~7.5k tokens. It
+fits in one system prompt with room to spare, and that prompt is byte-identical
+for every visitor, so it is a cache read after the first request of each window.
+Embeddings and a vector store would add three moving parts, a second failure
+mode, and worse answers, since chunking loses the argument that makes a case
+study worth reading. Revisit if the corpus triples.
+
+**Cost control.** `src/lib/chat/budget.ts` gives each visitor a rolling token
+allowance and the process a daily ceiling. Spend it and the sprite falls asleep
+and the input locks, in character, rather than erroring. It is in-memory, so on
+Vercel it is per-instance and resets on a cold start — a real guard against
+ordinary traffic, explicitly not a security control. Swapping in a shared store
+is a change to that one file.
+
+**Quips never hit the API.** They are local strings in `persona.ts`. An ambient
+bubble has to be free and instant; a visible pause before a joke is not a joke.
+
+**Editing the sprite** means editing `src/components/companion/sprite.ts`, which
+is ASCII art — sixteen strings of sixteen characters per state, each character
+mapped to a theme token, so it inverts correctly between light and dark with no
+second asset. A dev-only assert rejects a frame with the wrong dimensions or an
+unmapped character, because a mistyped character is otherwise skipped silently.
+
 ## How the accent system works
 
 A project declares **one hue**, never a colour. Lightness and chroma are held
@@ -172,7 +214,7 @@ the browser's own conversion.
 
 ## Motion
 
-Six effects run here, and each owns exactly one zone so they never compete:
+Seven effects run here, and each owns exactly one zone so they never compete:
 
 | Effect                    | Owns                      |
 | ------------------------- | ------------------------- |
@@ -180,6 +222,7 @@ Six effects run here, and each owns exactly one zone so they never compete:
 | Node-graph canvas         | Hero background only      |
 | Kinetic variable type     | Display-size text         |
 | Cursor-following previews | Project index rows        |
+| Pixel companion           | Bottom edge of every page |
 | View Transitions          | Navigation between routes |
 | Per-project accent        | Colour, everywhere        |
 
@@ -190,6 +233,14 @@ single number (`--scroll-v`) that CSS consumes; `PointerProvider` runs the only
 `pointermove` listener and the only pointer rAF loop. The magnetic cursor,
 cursor previews and node graph all subscribe to it. Verified: zero additional
 `pointermove` or `scroll` listeners register across four navigations.
+
+`ScrollDriver` also hands out the signed per-frame delta via `subscribeScroll`,
+for the one consumer that needs scroll in JS rather than CSS — the companion,
+which walks in the direction you scroll and so needs a sign that `--scroll-v`
+deliberately discards. Note that it _polls_ `scrollY` instead of listening for
+`scroll`, which turns out to be load-bearing rather than incidental: some
+embedded and automated browsers scroll the document without ever dispatching a
+`scroll` event to `window`, and a listener-based version silently does nothing.
 
 **One ladder.** `src/lib/capabilities.ts` centralises every switch-off —
 reduced motion, coarse pointer, low-power device — so no component invents its
@@ -210,20 +261,25 @@ Frame` is paused in background tabs and would otherwise leave the headline
 ## Layout
 
 ```
-src/app/          routes — all server components
-src/components/   ui/ · motion/ · kinetic/ · hero/ · work/ · intern/ · mdx/
-src/lib/          content, schema, accent, capabilities, site config
-src/data/         experience and skills (typed modules)
+src/app/          routes — all server components, plus api/chat
+src/components/   ui/ · motion/ · kinetic/ · hero/ · work/ · intern/ · mdx/ · companion/
+src/lib/          content, schema, accent, capabilities, site config, chat/
+src/data/         experience, skills, bio and persona (typed modules)
 content/projects/ case studies (.mdx)
 content/posts/    agent-written posts (.mdx)
 scripts/          ingest-posts.ts
 ```
 
-Client islands are limited to: theme toggle, index filter, and the motion
-components. Everything else renders on the server.
+Client islands are limited to: theme toggle, index filter, the motion
+components and the companion. Everything else renders on the server.
 
 ## Environment
 
 `NEXT_PUBLIC_SITE_URL` sets the absolute origin for `metadataBase`, the sitemap
 and OG image URLs. On Vercel it falls back to
 `VERCEL_PROJECT_PRODUCTION_URL`, and to `http://localhost:3000` locally.
+
+`ANTHROPIC_API_KEY` powers the companion's chat. It is optional: without it the
+build succeeds, the sprite still walks and the local quips still fire, and the
+chat answers in character that its brain is unplugged. `CHAT_MODEL` overrides
+the default model. See `.env.example`.

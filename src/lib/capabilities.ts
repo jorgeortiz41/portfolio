@@ -47,6 +47,15 @@ export function useFinePointer(): boolean {
 }
 
 /**
+ * Rung 3: narrow viewports. The companion docks in the corner instead of
+ * wandering — there is no width to wander across, and a sprite crossing a phone
+ * screen would spend most of its time on top of the thing you are reading.
+ */
+export function useWideViewport(): boolean {
+  return useMediaQuery("(min-width: 640px)");
+}
+
+/**
  * Rung 4: a coarse low-end heuristic. Deliberately conservative — it only
  * disables the canvas, the single genuinely expensive effect.
  */
