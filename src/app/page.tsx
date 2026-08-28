@@ -56,7 +56,7 @@ export default function Home() {
             <ScrambleText
               text="I build software for problems where a confidently wrong answer is the expensive one."
               delay={120}
-              speed={18}
+              duration={850}
             />
           </h1>
 

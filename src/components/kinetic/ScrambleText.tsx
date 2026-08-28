@@ -1,106 +1,166 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { useMotionEnabled } from "@/lib/capabilities";
 
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&$@/\\<>[]{}*+=~";
-
 /**
- * Resolves text out of scrambling characters.
+ * A decrypt sweep, not a full-line scramble.
  *
- * The rule that matters: `text` is rendered as real text in the server HTML and
- * the effect mutates it from there. Never the reverse — scrambled placeholder
- * markup would be what Google indexes and what shows before hydration.
+ * The first version scrambled every unresolved character at once, using a wide
+ * uppercase charset. At display size that is genuinely disorienting: caps carry
+ * a lot of visual mass, and because each random glyph has a different advance
+ * width, the whole headline jittered and rewrapped on every frame.
  *
- * The animating copy is aria-hidden with the real string on the wrapper, so
- * assistive tech announces the finished sentence and never the intermediate
- * garbage.
+ * This version fixes both:
+ *
+ * 1. Layout is locked. Every character is rendered in its final form and the
+ *    flicker glyph is painted in an overlay on top, so the line never reflows —
+ *    characters change in place.
+ * 2. Only a short window of characters at the reveal head flickers. Everything
+ *    ahead of it sits dim; everything behind is resolved. The eye tracks one
+ *    moving edge instead of the whole line boiling.
+ * 3. The charset is narrow and lowercase-biased, so the noise reads as machine
+ *    output rather than shouting.
+ *
+ * Server-rendering rule is unchanged and load-bearing: `text` renders as real
+ * text and the effect works from it, so crawlers never see gibberish.
  */
+
+// Narrow, low-mass glyphs. No capitals — they dominate at display sizes.
+const GLYPHS = "01<>[]{}/\\|_-=+*:;.^~aceinorstuvxz";
+
+const randomGlyph = () => GLYPHS[(Math.random() * GLYPHS.length) | 0] as string;
+
 export function ScrambleText({
   text,
   className,
-  /** ms before the reveal starts — used to stagger against other hero motion. */
+  /** ms before the sweep starts. */
   delay = 0,
-  /** ms per character of reveal. */
-  speed = 26,
+  /** total ms for the head to cross the whole string. */
+  duration = 850,
+  /** how many characters flicker at the head at once. */
+  window: windowSize = 9,
 }: {
   text: string;
   className?: string;
   delay?: number;
-  speed?: number;
+  duration?: number;
+  window?: number;
 }) {
-  const ref = useRef<HTMLSpanElement>(null);
+  const rootRef = useRef<HTMLSpanElement>(null);
   const motionEnabled = useMotionEnabled();
 
   useEffect(() => {
     if (!motionEnabled) return;
-    const node = ref.current;
-    if (!node) return;
+    const root = rootRef.current;
+    if (!root) return;
 
+    const cells = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-cell]"),
+    ).map((cell) => ({
+      real: cell.querySelector<HTMLElement>("[data-real]"),
+      fx: cell.querySelector<HTMLElement>("[data-fx]"),
+    }));
+    if (cells.length === 0) return;
+
+    const total = cells.length;
     let frame = 0;
     let start: number | null = null;
 
-    // Whitespace is never scrambled — otherwise word boundaries shift and the
-    // headline visibly rewraps while it resolves.
-    const chars = [...text];
-    const revealAt = chars.map((_, i) => i * speed);
-    const total = revealAt[revealAt.length - 1] ?? 0;
-
-    const tick = (now: number) => {
-      start ??= now;
-      const elapsed = now - start;
-
-      let output = "";
-      for (let i = 0; i < chars.length; i++) {
-        const char = chars[i] as string;
-        if (/\s/.test(char) || elapsed >= (revealAt[i] ?? 0)) {
-          output += char;
-        } else {
-          output += GLYPHS[(Math.random() * GLYPHS.length) | 0];
+    const settle = () => {
+      for (const { real, fx } of cells) {
+        if (real) real.style.opacity = "1";
+        if (fx) {
+          fx.style.opacity = "0";
+          fx.textContent = "";
         }
-      }
-      node.textContent = output;
-
-      if (elapsed < total) {
-        frame = requestAnimationFrame(tick);
-      } else {
-        node.textContent = text;
       }
     };
 
-    const timer = setTimeout(() => {
+    const tick = (now: number) => {
+      start ??= now;
+      const progress = Math.min((now - start) / duration, 1);
+      const head = progress * (total + windowSize);
+
+      for (let i = 0; i < total; i++) {
+        const cell = cells[i];
+        if (!cell) continue;
+        const { real, fx } = cell;
+
+        if (i < head - windowSize) {
+          // resolved
+          if (real) real.style.opacity = "1";
+          if (fx && fx.style.opacity !== "0") {
+            fx.style.opacity = "0";
+            fx.textContent = "";
+          }
+        } else if (i <= head) {
+          // in the flicker window
+          if (real) real.style.opacity = "0";
+          if (fx) {
+            fx.style.opacity = "1";
+            fx.textContent = randomGlyph();
+          }
+        } else {
+          // not yet reached
+          if (real) real.style.opacity = "0.1";
+          if (fx && fx.style.opacity !== "0") {
+            fx.style.opacity = "0";
+            fx.textContent = "";
+          }
+        }
+      }
+
+      if (progress < 1) frame = requestAnimationFrame(tick);
+      else settle();
+    };
+
+    const startTimer = setTimeout(() => {
       frame = requestAnimationFrame(tick);
     }, delay);
 
     /**
-     * Guarantee the headline resolves.
-     *
-     * requestAnimationFrame is paused in background tabs and throttled in some
-     * embedded contexts, which leaves the scramble frozen mid-garble on the most
-     * important sentence on the site. This wall-clock deadline force-completes
-     * it regardless of whether a single frame ever ran.
+     * requestAnimationFrame is paused in background tabs, which would otherwise
+     * leave the most important sentence on the site frozen mid-decrypt. This
+     * wall-clock deadline force-completes it whether or not a frame ever ran.
      */
-    const deadline = setTimeout(
-      () => {
-        cancelAnimationFrame(frame);
-        node.textContent = text;
-      },
-      delay + total + 400,
-    );
+    const deadline = setTimeout(settle, delay + duration + 400);
 
     return () => {
-      clearTimeout(timer);
+      clearTimeout(startTimer);
       clearTimeout(deadline);
       cancelAnimationFrame(frame);
-      node.textContent = text;
+      settle();
     };
-  }, [text, delay, speed, motionEnabled]);
+  }, [text, delay, duration, windowSize, motionEnabled]);
+
+  // Split by word so the headline still wraps at word boundaries; each word is
+  // an inline-block of per-character cells.
+  const words = text.split(" ");
 
   return (
-    <span className={className} aria-label={text}>
-      <span ref={ref} aria-hidden="true">
-        {text}
-      </span>
+    <span ref={rootRef} className={className} aria-label={text}>
+      {words.map((word, w) => (
+        <Fragment key={`${word}-${w}`}>
+          <span className="inline-block whitespace-nowrap">
+            {[...word].map((char, i) => (
+              <span
+                key={`${char}-${i}`}
+                data-cell=""
+                className="relative inline-block"
+                aria-hidden="true"
+              >
+                <span data-real="">{char}</span>
+                <span
+                  data-fx=""
+                  className="pointer-events-none absolute top-0 left-0 text-accent opacity-0"
+                />
+              </span>
+            ))}
+          </span>
+          {w < words.length - 1 ? " " : null}
+        </Fragment>
+      ))}
     </span>
   );
 }
