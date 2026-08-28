@@ -46,6 +46,17 @@ const STEP_MS = 180;
 /** Allowance below which the sprite starts looking like it needs a nap. */
 const DROWSY_AT = 0.2;
 
+/**
+ * How long he stands still to deliver a line, in ms.
+ *
+ * Deliberately much shorter than the bubble stays up. He used to be frozen for
+ * the bubble's entire life, which at the new quip cadence would have him
+ * standing around roughly a third of the time. A beat is enough to read as
+ * "stopped to say something"; after that he walks on and the bubble travels
+ * with him, exactly like an NPC that comments and carries on.
+ */
+const DELIVERY_MS = 2_400;
+
 export function Companion() {
   const mounted = useMounted();
   const motion = useMotionEnabled();
@@ -59,18 +70,32 @@ export function Companion() {
   const quip = useIdleQuips(!open);
 
   /**
+   * The delivery beat: he plants his feet for a moment when a line lands, then
+   * carries on. Quips are scheduled entirely independently of walking (see
+   * `useIdleQuips`), so he says the same things just as often whether he is
+   * chasing the cursor, strolling, or standing still — this only decides how
+   * long he holds still to say them.
+   */
+  const [settled, setSettled] = useState<string | null>(null);
+  useEffect(() => {
+    if (quip === null) return;
+    const id = setTimeout(() => setSettled(quip), DELIVERY_MS);
+    return () => clearTimeout(id);
+  }, [quip]);
+
+  /* Derived, not stored. Writing this into state meant setting it synchronously
+     in an effect body on every quip, which is a cascading render — and the
+     "no quip, so not delivering" case falls out of the expression for free. */
+  const delivering = quip !== null && settled !== quip;
+
+  /**
    * `enabled` is deliberately stable — it must NOT include `open` or `quip`.
    * Flipping it tears the walk effect down and rebuilds it, and the position
    * used to be initialised in there, so every chat open/close snapped him back
    * to the left edge. Stopping him is a `paused` input instead, which leaves
    * the subscription and his position alone.
-   *
-   * He stands still to speak. That is characterful, and it also removes the
-   * only way the pose and the motion could disagree: `talk` outranks the walk
-   * frames, so a quip while moving used to render a standing sprite sliding
-   * across the page.
    */
-  const { ref, gait } = useCompanionWalk(motion && wide, quip !== null);
+  const { ref, gait } = useCompanionWalk(motion && wide, delivering);
 
   const [step, setStep] = useState(false);
   useEffect(() => {
@@ -88,13 +113,22 @@ export function Companion() {
 
   if (!mounted) return null;
 
-  /* Conversation and mood outrank locomotion: if he is answering you, he has
-     stopped to do it — and `paused` above guarantees he really has, so this
-     ordering can no longer produce a standing pose on a moving sprite. */
   const walking = gait.moving && motion;
 
-  const pose: Pose =
-    status === "asleep" || status === "offline"
+  /**
+   * MOVING ALWAYS WINS. Every other pose is a standing frame, so letting mood
+   * or conversation outrank locomotion is the one way this can render a
+   * stationary sprite sliding across the page — which is exactly what a quip
+   * while walking used to do, and what being out of budget would do the moment
+   * `sleep` outranked a stroll. Testing `walking` first makes
+   * "in motion implies a walk frame" structural rather than something the
+   * ordering below has to keep getting right.
+   */
+  const pose: Pose = walking
+    ? step
+      ? "walkA"
+      : "walkB"
+    : status === "asleep" || status === "offline"
       ? "sleep"
       : status === "grumpy"
         ? "grumpy"
@@ -102,13 +136,9 @@ export function Companion() {
           ? "think"
           : status === "streaming" || (quip !== null && !open)
             ? "talk"
-            : walking
-              ? step
-                ? "walkA"
-                : "walkB"
-              : budget !== null && budget < DROWSY_AT
-                ? "drowsy"
-                : "idle";
+            : budget !== null && budget < DROWSY_AT
+              ? "drowsy"
+              : "idle";
 
   // Profile only while actually travelling — he faces you to talk, doze or sulk.
   const facing: Facing =

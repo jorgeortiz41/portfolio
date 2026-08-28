@@ -14,17 +14,30 @@ import { quips, type Quip } from "@/data/persona";
  * receive, and a visible pause before a joke is not a joke.
  *
  * Fires shortly after a route change (the sprite reacting to where you went)
- * and then on a slow timer. Recently-used lines are held back so the same quip
- * does not land twice in one visit.
+ * and then on a timer. Recently-used lines are held back so the same quip does
+ * not land twice in one visit.
+ *
+ * THIS KNOWS NOTHING ABOUT WALKING, ON PURPOSE. The causation runs the other
+ * way: a quip appearing is what makes the companion stop, not the reverse (see
+ * the delivery beat in `Companion`). So he speaks just as often whether he is
+ * chasing the cursor, strolling, or standing still — which is the whole point
+ * of keeping the schedule here rather than in the walk loop.
  */
 
 /** Delay after a route change before the sprite comments on it. */
 const ROUTE_DELAY_MS = 2_600;
-/** Gap between unprompted quips. */
-const IDLE_MIN_MS = 26_000;
-const IDLE_MAX_MS = 48_000;
+/**
+ * Gap between unprompted quips.
+ *
+ * This used to be 26-48s, which averages 37 seconds of silence. That read as
+ * sparse once he was in motion most of the time — a long gap is much more
+ * noticeable beside a character who is visibly doing something than beside one
+ * standing still. Roughly halved.
+ */
+const IDLE_MIN_MS = 13_000;
+const IDLE_MAX_MS = 24_000;
 /** How long a bubble stays up. */
-const VISIBLE_MS = 6_500;
+const VISIBLE_MS = 5_600;
 /** Lines held back before they may repeat. */
 const MEMORY = 8;
 
@@ -46,28 +59,44 @@ export function useIdleQuips(enabled: boolean): string | null {
   useEffect(() => {
     if (!enabled) return;
 
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    const later = (fn: () => void, ms: number) => {
-      timers.push(setTimeout(fn, ms));
+    // Two handles rather than an ever-growing array: at any moment there is one
+    // pending hide and one pending next-quip, and the old version pushed a new
+    // entry per quip and never released any of them.
+    let hide: ReturnType<typeof setTimeout> | undefined;
+    let next: ReturnType<typeof setTimeout> | undefined;
+
+    const scheduleNext = () => {
+      next = setTimeout(
+        speak,
+        IDLE_MIN_MS + Math.random() * (IDLE_MAX_MS - IDLE_MIN_MS),
+      );
     };
 
-    const speak = () => {
+    function speak() {
       const pool = matching(pathname);
       const fresh = pool.filter((q) => !recent.current.includes(q.text));
       const candidates = fresh.length > 0 ? fresh : pool;
       const chosen = candidates[Math.floor(Math.random() * candidates.length)];
-      if (!chosen) return;
+
+      // Reschedule even when there is nothing to say. Returning early here
+      // broke the chain permanently — one empty pool and the companion went
+      // silent for the rest of the visit, with no way to tell from the outside.
+      if (!chosen) {
+        scheduleNext();
+        return;
+      }
 
       recent.current = [chosen.text, ...recent.current].slice(0, MEMORY);
       setQuip(chosen.text);
-      later(() => setQuip(null), VISIBLE_MS);
-      later(speak, IDLE_MIN_MS + Math.random() * (IDLE_MAX_MS - IDLE_MIN_MS));
-    };
+      hide = setTimeout(() => setQuip(null), VISIBLE_MS);
+      scheduleNext();
+    }
 
-    later(speak, ROUTE_DELAY_MS);
+    next = setTimeout(speak, ROUTE_DELAY_MS);
 
     return () => {
-      for (const timer of timers) clearTimeout(timer);
+      clearTimeout(hide);
+      clearTimeout(next);
       setQuip(null);
     };
   }, [enabled, pathname]);

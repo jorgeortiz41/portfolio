@@ -143,18 +143,18 @@ export const quips: readonly Quip[] = [
     text: "Hermit's unfinished and on the site anyway. That was on purpose.",
   },
 
-  // ----------------------------------------------------------------- Intern
+  // ------------------------------------------------------------------- Wire
   {
-    route: "/intern",
+    route: "/wire",
     text: "These are written by a scheduled agent. Not me. Different guy. Weekly.",
   },
   {
-    route: "/intern",
-    text: "My colleague the intern files three of these a week and never sleeps.",
+    route: "/wire",
+    text: "Something files three of these a week and never sleeps. It isn't me.",
   },
   {
-    route: "/intern",
-    text: "If a post is wrong, take it up with the intern. I just live here.",
+    route: "/wire",
+    text: "If a post is wrong, take it up with the agent. I just live here.",
   },
 
   // ------------------------------------------------------------------ About
