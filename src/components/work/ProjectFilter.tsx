@@ -33,7 +33,7 @@ export function ProjectFilter({
   return (
     <>
       <div
-        className="mt-8 flex flex-wrap gap-2"
+        className="mt-8 flex flex-wrap gap-2.5 sm:gap-2"
         role="group"
         aria-label="Filter by technology"
       >
@@ -46,7 +46,7 @@ export function ProjectFilter({
               onClick={() => setActive(tag)}
               aria-pressed={selected}
               className={cn(
-                "rounded-full border px-3 py-1.5 font-mono text-[0.6875rem] tracking-wide transition-colors",
+                "inline-flex min-h-11 items-center rounded-full border px-4 py-2 font-mono text-[0.6875rem] tracking-wide transition-colors sm:min-h-0 sm:px-3 sm:py-1.5",
                 selected
                   ? "border-accent-hairline bg-accent-soft text-accent"
                   : "border-rule text-ink-faint hover:border-rule-strong hover:text-ink-muted",

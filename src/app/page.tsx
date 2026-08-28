@@ -61,10 +61,10 @@ export default function Home() {
           </h1>
 
           <p className="mt-8 max-w-xl text-lg text-ink-muted">
-            Six years across radio astronomy instrumentation, SMS marketing
-            platforms, esports analytics and threat intelligence — most recently
-            building AI threat-intelligence tooling at Evertec. Now in my final
-            semester.
+            Six years shipping production software end to end — REST and GraphQL
+            APIs, Postgres schemas and ETL pipelines, React front ends, and the
+            LLM agents and ML models layered on top. Final semester, looking for
+            full-time work.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">

@@ -22,17 +22,17 @@ export function SiteHeader() {
       <Container className="flex h-16 items-center justify-between gap-6">
         <Link
           href="/"
-          className="font-mono text-sm tracking-[0.16em] uppercase transition-colors hover:text-accent"
+          className="tap-target font-mono text-sm tracking-[0.16em] uppercase transition-colors hover:text-accent"
         >
           {site.name}
         </Link>
 
-        <nav aria-label="Main" className="flex items-center gap-6">
+        <nav aria-label="Main" className="flex items-center gap-5 sm:gap-6">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="font-mono text-xs tracking-[0.16em] text-ink-muted uppercase transition-colors hover:text-ink"
+              className="tap-target font-mono text-xs tracking-[0.16em] text-ink-muted uppercase transition-colors hover:text-ink"
             >
               {item.label}
             </Link>

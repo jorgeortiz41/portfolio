@@ -16,7 +16,7 @@ export function SiteFooter() {
           © {new Date().getFullYear()} {site.name} · {site.location}
         </p>
 
-        <ul className="flex items-center gap-5">
+        <ul className="-m-2 flex items-center gap-1 sm:m-0 sm:gap-5">
           {socials.map(({ href, label, Icon }) => (
             <li key={label}>
               <a
@@ -25,7 +25,7 @@ export function SiteFooter() {
                 {...(href.startsWith("http")
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
-                className="block text-ink-faint transition-colors hover:text-accent"
+                className="inline-flex size-11 items-center justify-center text-ink-faint transition-colors hover:text-accent sm:size-auto"
               >
                 <Icon className="size-5" />
               </a>
