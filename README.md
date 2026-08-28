@@ -25,6 +25,33 @@ bun run dev
 
 CI runs typecheck, lint, format:check and build on every PR.
 
+## Deployment
+
+Vercel builds this with Bun automatically — it detects `bun.lock` and runs
+`bun install` then `bun run build`. No configuration needed.
+
+**The lockfile is deliberately `lockfileVersion: 1`.** Vercel's build image
+currently ships Bun 1.3.14, which cannot parse the version 2 format that Bun
+1.4 writes:
+
+```
+error: Unknown lockfile version
+UnknownLockfileVersion: failed to parse lockfile: 'bun.lock'
+warn: Ignoring lockfile
+```
+
+The build still succeeds when that happens, which is what makes it easy to
+miss — but Vercel resolves every dependency fresh, so the lockfile stops
+pinning anything and production can drift from what was tested locally.
+
+Bun 1.4 reads and _preserves_ a v1 lockfile through both `bun install` and
+`bun add`, so this needs no ongoing maintenance. But do not regenerate the
+lockfile from scratch with Bun 1.4 (`rm bun.lock && bun install`) — that writes
+v2 and silently reintroduces the problem. If it needs regenerating, use Bun
+1.3.x, or check the deploy log for the warning above afterwards.
+
+Revisit once Vercel's build image ships Bun 1.4+.
+
 ## Adding a project
 
 Create `content/projects/<slug>.mdx`. The filename is the URL.
