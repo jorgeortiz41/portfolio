@@ -40,3 +40,6 @@ blogs/
 
 # Agent worktrees. Full checkouts, node_modules and all — never committed.
 .claude/worktrees/
+
+# .env
+.env
