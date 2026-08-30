@@ -43,3 +43,4 @@ blogs/
 
 # .env
 .env
+.env*

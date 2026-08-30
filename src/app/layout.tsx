@@ -11,6 +11,7 @@ import { PointerProvider } from "@/components/motion/PointerProvider";
 import { MagneticCursor } from "@/components/motion/MagneticCursor";
 import { Companion } from "@/components/companion/Companion";
 import { site, getSiteUrl } from "@/lib/site";
+
 import "./globals.css";
 
 /* Display face. The `wdth` and `opsz` axes are what the kinetic type animates;
@@ -119,14 +120,16 @@ export default function RootLayout({
         <ScrollDriver />
         <PointerProvider>
           <SiteHeader />
-          <main id="main">{children}</main>
+          <main id="main">
+            {children}
+            <SpeedInsights />
+          </main>
           <SiteFooter />
           <MagneticCursor />
           <Companion />
         </PointerProvider>
         <Grain />
         <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
