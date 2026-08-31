@@ -1,0 +1,54 @@
+---
+title: "Next.js Shipped an Emergency Patch for Two Unauthenticated RCEs — Here's What to Check"
+date: "2026-08-31"
+summary: "Next.js moved up its August security release to patch two critical remote-code-execution flaws, one in AVIF image optimization and one affecting Windows-hosted servers."
+topic: web
+tags: [nextjs, security, vulnerability, vercel, javascript]
+sources:
+  - title: "August 2026 Security Release"
+    url: "https://nextjs.org/blog/august-2026-security-release"
+    publisher: "Next.js / Vercel"
+  - title: "Update: August Next.js Security Release"
+    url: "https://nextjs.org/blog/nextjs-security-release-august-2026-update"
+    publisher: "Next.js / Vercel"
+  - title: "Next.js Patches Critical AVIF and Windows Flaws Enabling Unauthenticated RCE"
+    url: "https://thehackernews.com/2026/08/nextjs-patches-critical-avif-and.html"
+    publisher: "The Hacker News"
+generatedAt: "2026-08-31T12:10:45Z"
+draft: false
+---
+
+Security releases for major frameworks usually follow a predictable rhythm: an advance-notice post, a fixed date, a changelog entry, done. Next.js broke that rhythm this week. A release originally scheduled for August 26 got pulled forward a full day after the team found a second critical vulnerability while preparing the first fix — and rather than ship two separate patches, they held the release just long enough to bundle both into one upgrade. If you're running a production Next.js app, this is one of those weeks where reading the changelog isn't optional.
+
+## The Two Vulnerabilities
+
+The first issue lives in Next.js's built-in Image Optimization API and traces back to `libheif`, the library `sharp` uses under the hood to decode AVIF images. A specially crafted, malformed AVIF file — with nested identity-derivation and auxiliary item references — can trigger a heap buffer overflow during image scaling, corrupting roughly 16KB of memory past the intended allocation. Chained correctly, that's enough for unauthenticated remote code execution, and the trigger is simply an attacker-controlled image passed through Next.js's optimizer. Sites that don't explicitly enable AVIF optimization in `next.config.js` aren't exposed, but plenty of image-heavy sites do enable it precisely because AVIF compresses better than the alternatives.
+
+The second is scarier in a narrower way. Applications that use both the Pages Router and the App Router without Cache Components, running on a Windows-hosted server, are vulnerable to unauthenticated RCE with no known workaround short of upgrading. Vercel's advisory is blunt about it: if your server is on Windows, upgrade immediately. Linux and macOS deployments — which cover the overwhelming majority of production Next.js hosting, including Vercel's own infrastructure — are unaffected by this particular flaw. The Hacker News' write-up assigned it CVE-2026-75604 with a CVSS score of 9.0, and pegged the AVIF issue at 9.5, putting both squarely in the critical band.
+
+## Who's Affected, and by How Much
+
+The version ranges are wide. The AVIF flaw touches Next.js 10.0.0 through 15.5.23 and every 16.x release through 16.3.2 — essentially the entire supported history of the framework for anyone with AVIF optimization turned on. The Windows RCE spans 13.4 through 15.5.23 and 16.0 through 16.3.2. In practice, that means almost any team running a self-hosted Next.js deployment that hasn't updated in the last few days is sitting on at least one of these two bugs, and possibly both.
+
+The fix landed as two coordinated releases: 16.3.3 for the Active LTS line and 15.5.24 for Maintenance LTS. For the AVIF bug specifically, the patch doesn't wait on an upstream `libheif` fix — it disables AVIF optimization outright until that dependency is patched further up the chain, trading a format optimization for closing an active RCE vector. That's a reasonable trade during an emergency window, but it does mean AVIF-dependent image pipelines will silently fall back to other formats until the underlying library catches up.
+
+## What to Actually Do
+
+The upgrade path is a one-line change either way:
+
+```bash
+npm install next@15.5.24  # for the 15.5 line
+npm install next@16.3.3   # for the 16.3 line
+```
+
+Vercel-hosted deployments were already protected automatically and don't require action — one of the advantages of the platform managing the runtime for you. Everyone else — self-hosted on AWS, GCP, bare metal, Windows servers, Docker containers — needs to pull the new version and redeploy. If AVIF optimization was load-bearing for your image pipeline's file sizes, budget time to re-evaluate output once the fallback format kicks in. And if any part of your infrastructure runs Next.js on Windows, treat this as the top priority on your list today, not this sprint — there is no interim mitigation available for that specific path.
+
+As of the disclosure, Vercel reported no known exploits in the wild. That's a real but temporary grace period. Once a CVE with a 9+ CVSS score and public technical detail is out, working proof-of-concept exploits for unauthenticated RCE bugs tend to show up within days, not weeks — the disclosure itself is often what turns "we found something" into "someone's actively scanning for it."
+
+## The Bigger Pattern
+
+This is at least the third Next.js security release cycle of 2026 to disclose a critical-severity flaw, following an RCE and cache-poisoning issue earlier in the year. None of that means Next.js is unusually insecure relative to comparable frameworks — a widely deployed piece of infrastructure that processes untrusted input (in this case, arbitrary uploaded images) is inherently a high-value target, and finding these bugs through a structured bug bounty program before attackers do is the system working as intended. But it's a good prompt to check whether your team actually has a process for tracking framework security advisories, rather than discovering them a month later through a stray tweet.
+
+## Takeaway
+
+Two critical, unauthenticated RCE vulnerabilities in one of the web's most widely deployed frameworks is about as clear a "patch now" signal as security advisories get. If you're on Next.js 15.x or 16.x and haven't upgraded to 15.5.24 or 16.3.3 yet, that's the first thing to do after reading this — especially if AVIF optimization is enabled or your infrastructure touches a Windows host anywhere in the deployment chain.
