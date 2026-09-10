@@ -1,0 +1,53 @@
+---
+title: Chernobyl Monitor
+tagline: A native macOS system monitor reading live CPU, memory and process data from the OS, presented as a reactor control room.
+role: Sole engineer
+period: "2026 — in progress"
+accent: 220
+featured: false
+order: 8
+summary: >-
+  An in-progress native desktop system monitor for macOS. A Rust backend reads
+  live CPU, memory and per-process data from the operating system and pushes it
+  to the frontend over Tauri's IPC bridge, behind an interface styled as a 1970s
+  nuclear reactor control room.
+cover:
+    src: /chernobyl-placeholder.webp
+    alt: Chernobyl Monitor reactor control room interface
+    width: 600
+    height: 340
+stack:
+  - Tauri
+  - Rust
+  - React
+  - TypeScript
+  - Vite
+  - Bun
+  - sysinfo
+links:
+  repo: https://github.com/jorgeortiz41/chernobyl-monitor
+---
+
+## Context
+
+Reading what every process on the machine is doing to CPU and memory right now
+takes OS-level access, which a browser tab does not have. That is the reason
+this one is a native desktop app rather than another web front end.
+
+## Approach
+
+A Rust backend reads system and per-process data from macOS through **sysinfo**
+and pushes it to the frontend over **Tauri 2's** IPC bridge, so the measurement
+work stays on the native side and the React layer only renders what arrives.
+
+## Interface
+
+The panel is a 1970s nuclear reactor control room: an analog sweep gauge, LED
+bargraph columns, seven-segment readouts, a scrolling strip-chart recorder, an
+annunciator alarm panel and a line-printer process table. Killing a process goes
+through a guarded switch, so the one irreversible control on the panel is harder
+to hit by accident than the rest.
+
+## Status
+
+**In progress.** The source is public while the build continues.
